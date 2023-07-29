@@ -5,6 +5,7 @@
 		}
     ],
     "settings": {
-        "cmake.buildDirectory": "${workspaceFolder}/Build"
+        "cmake.buildDirectory": "${workspaceFolder}/Build",
+        "cmake.showSystemKits": false
     }
 }
