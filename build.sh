@@ -4,9 +4,6 @@ DIR_BUILD="${PROJECT_DIR}/Build"
 DIR_CMAKE="${PROJECT_DIR}/CMake"
 DIR_TOOLCHAINS="${DIR_CMAKE}/Toolchains"
 
-# Script arguments
-verbose=0
-
 show_help() {
     echo "TODO"
 }
@@ -15,28 +12,28 @@ check_requirements() {
     set -- "cmake" "ninja" "clang" "clang++"
     for program in "$@"; do
         if [ ! "$(command -v "${program}")" ]; then
-            echo "Did not find '${program}' in PATH."
+            echo "Did not find '${program}' in \$PATH."
             exit 1
         fi
     done
 }
 
+clean_stage() {
+    rm -r "${DIR_BUILD}"
+}
+
 build_stage() {
-    if [ "$verbose" = 1 ]; then echo "Building..."; fi
     if [ ! -e "${DIR_BUILD}" ]; then
-        if [ "$verbose" = 1 ]; then echo "Creating '${DIR_BUILD}' directory..."; fi
         mkdir "${DIR_BUILD}"
     fi
 
     cmake \
         -B "${DIR_BUILD}" "${PROJECT_DIR}" \
+        -DCMAKE_MAKE_PROGRAM="ninja" \
         -DCMAKE_TOOLCHAIN_FILE="${DIR_TOOLCHAINS}/amd64-buildroot-generic.cmake"
 
     cmake --build "${DIR_BUILD}"
 }
-
-check_requirements
-build_stage
 
 while :; do
     case $1 in
@@ -44,12 +41,8 @@ while :; do
             show_help
             exit
             ;;
-        -v|--verbose)
-            # Each -v argument adds 1 to verbosity.
-            verbose=$((verbose + 1))
-            ;;
         -c|--clean)
-
+            exit
             ;;
         --)
             # End of all options.
@@ -57,7 +50,7 @@ while :; do
             break
             ;;
         -?*)
-            printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
+            echo "Unknown option (ignored): '$1'"
             ;;
         *)
             break
@@ -65,3 +58,6 @@ while :; do
 
     shift
 done
+
+check_requirements
+build_stage
