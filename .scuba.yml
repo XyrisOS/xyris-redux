@@ -1,0 +1,3 @@
+image: xyris-redux-build:1.0.0
+aliases:
+  build: ./build.sh

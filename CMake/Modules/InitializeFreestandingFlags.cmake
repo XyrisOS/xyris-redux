@@ -1,27 +1,14 @@
-set(LINKER_FREESTANDING_FLAGS
-    "-nostdlib"
-    "-lgcc"
-)
+set(BUILD_SHARED_LIBS OFF)
+set(LINKER_FREESTANDING_FLAGS -nostdlib -nostartfiles -static)
+add_link_options(${LINKER_FREESTANDING_FLAGS})
 
-set(C_CXX_FREESTANDING_FLAGS
-    "-nodefaultlibs"
-    "-ffreestanding"
-    "-fstack-protector"
-    "-fno-omit-frame-pointer"
-)
+# Unused for now since clang complains about them being unused
+set(C_CXX_FREESTANDING_X86_64_FLAGS -mno-mmx -mno-sse -mno-sse2)
 
-set(CMAKE_CXX_FLAGS
-    ${C_CXX_FREESTANDING_FLAGS}
-    "-fno-use-cxa-atexit"
-    "-fno-exceptions"
-    "-fno-rtti"
+set(C_CXX_FREESTANDING_FLAGS -mcmodel=large -nodefaultlibs -nostdlib -ffreestanding -fstack-protector -fno-omit-frame-pointer)
+set(CXX_FLAGS ${C_CXX_FREESTANDING_FLAGS} -mno-red-zone -fno-use-cxa-atexit -fno-exceptions -fno-rtti)
+set(C_FLAGS ${C_CXX_FREESTANDING_FLAGS})
+add_compile_options(
+    "$<$<COMPILE_LANGUAGE:CXX>:${CXX_FLAGS}>"
+    "$<$<COMPILE_LANGUAGE:C>:${C_FLAGS}>"
 )
-
-set(CMAKE_C_FLAGS
-    ${C_CXX_FREESTANDING_FLAGS}
-    "-ffreestanding"
-)
-
-set(CMAKE_EXE_LINKER_FLAGS ${LINKER_FREESTANDING_FLAGS})
-set(CMAKE_MODULE_LINKER_FLAGS ${LINKER_FREESTANDING_FLAGS})
-set(CMAKE_STATIC_LINKER_FLAGS ${LINKER_FREESTANDING_FLAGS})

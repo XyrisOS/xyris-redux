@@ -9,7 +9,7 @@ show_help() {
 }
 
 check_requirements() {
-    set -- "cmake" "ninja" "clang" "clang++"
+    set -- "cmake" "ninja" "clang" "clang++" "mold"
     for program in "$@"; do
         if [ ! "$(command -v "${program}")" ]; then
             echo "Did not find '${program}' in \$PATH."
@@ -29,7 +29,7 @@ build_stage() {
 
     cmake \
         -B "${DIR_BUILD}" "${PROJECT_DIR}" \
-        -DCMAKE_MAKE_PROGRAM="ninja" \
+        -G Ninja \
         -DCMAKE_TOOLCHAIN_FILE="${DIR_TOOLCHAINS}/amd64-buildroot-generic.cmake"
 
     cmake --build "${DIR_BUILD}"
@@ -42,6 +42,7 @@ while :; do
             exit
             ;;
         -c|--clean)
+            clean_stage
             exit
             ;;
         --)
