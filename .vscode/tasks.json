@@ -2,22 +2,26 @@
 	"version": "2.0.0",
 	"tasks": [
         {
-            "type": "cmake",
-            "label": "CMake: build",
-            "command": "build",
-            "targets": [
-                "all"
+            "type": "shell",
+            "label": "Build",
+            "command": "scuba",
+            "args": [
+                "build"
             ],
-            "group": "build",
-            "problemMatcher": [],
-            "detail": "CMake template build task"
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [ "$gcc" ]
         },
         {
-            "type": "cmake",
-            "label": "CMake: clean",
-            "command": "clean",
-            "problemMatcher": [],
-            "detail": "CMake template clean task"
+            "type": "shell",
+            "label": "Clean",
+            "command": "scuba",
+            "args": [
+                "clean"
+            ],
+            "problemMatcher": []
         }
     ]
 }
