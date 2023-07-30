@@ -17,5 +17,7 @@ for TARGET in "x86_64-elf"; do
     make
     make install-strip
     cd .. || exit
-    rm -r "build-binutils-${TARGET}"
+    rm -rf "build-binutils-${TARGET}"
 done
+
+rm -rf "binutils-${BIN_VER}"
