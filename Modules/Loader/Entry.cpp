@@ -1,7 +1,9 @@
+extern "C" void _start(void);
+
 extern "C" void _start(void) {
     //
 }
 
-void loader_main(void) {
+static void loader_main(void) {
     //
 }
