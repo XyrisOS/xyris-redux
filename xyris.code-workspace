@@ -4,9 +4,50 @@
 			"path": "."
 		}
     ],
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "type": "shell",
+                "label": "Build",
+                "command": "scuba",
+                "args": [
+                    "build"
+                ],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                },
+                "problemMatcher": [ "$gcc" ]
+            },
+            {
+                "type": "shell",
+                "label": "Clean",
+                "command": "scuba",
+                "args": [
+                    "clean"
+                ],
+                "problemMatcher": []
+            }
+        ]
+    },
     "settings": {
+        // C / C++
+        "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+
+        // CMake
         "cmake.buildDirectory": "${workspaceFolder}/Build",
         "cmake.showSystemKits": false,
-        "cmake.configureOnEdit": false
+        "cmake.configureOnEdit": false,
+        "cmake.configureArgs": [
+            "-DCMAKE_MAKE_PROGRAM=ninja",
+            "-DCMAKE_TOOLCHAIN_FILE=${workspaceRoot}/CMake/Toolchains/amd64-buildroot-generic.cmake"
+        ],
+
+        // Style
+        "files.trimTrailingWhitespace": true,
+        "[markdown]": {
+            "files.trimTrailingWhitespace": false
+        },
     }
 }
