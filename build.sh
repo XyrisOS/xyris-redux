@@ -10,7 +10,7 @@ show_help() {
 }
 
 check_requirements() {
-    set -- "cmake" "ninja" "clang" "clang++" "mold"
+    set -- "cmake" "ninja" "clang" "clang++"
     for program in "$@"; do
         if [ ! "$(command -v "${program}")" ]; then
             echo "Did not find '${program}' in \$PATH."
@@ -20,7 +20,9 @@ check_requirements() {
 }
 
 clean_stage() {
-    rm -r "${DIR_BUILD}"
+    if [ -e "${DIR_BUILD}" ]; then
+        rm -r "${DIR_BUILD}"
+    fi
 }
 
 build_stage() {
