@@ -10,7 +10,7 @@ show_help() {
 }
 
 check_requirements() {
-    set -- "cmake" "ninja" "clang" "clang++"
+    set -- "cmake" "ninja" "nasm" "mold"
     for program in "$@"; do
         if [ ! "$(command -v "${program}")" ]; then
             echo "Did not find '${program}' in \$PATH."
