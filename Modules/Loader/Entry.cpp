@@ -1,4 +1,4 @@
-void _start(void) {
+extern "C" void _start(void) {
     //
 }
 
