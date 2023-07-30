@@ -34,12 +34,11 @@ build_stage() {
     fi
 
     cmake \
-        -B "${DIR_BUILD}" "${PROJECT_DIR}" \
         -G Ninja \
+        -B "${DIR_BUILD}" "${PROJECT_DIR}" \
         -DCMAKE_INSTALL_PREFIX="${DIR_INSTALL}" \
         -DCMAKE_TOOLCHAIN_FILE="${DIR_TOOLCHAINS}/amd64-buildroot-generic.cmake"
-
-    cmake --build "${DIR_BUILD}"
+    cmake --build "${DIR_BUILD}" -j "$(nproc)"
     cmake --install "${DIR_BUILD}"
 }
 
