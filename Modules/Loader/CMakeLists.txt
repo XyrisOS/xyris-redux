@@ -6,4 +6,4 @@ add_library(Loader STATIC
     Entry.cpp
 )
 
-set(LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Linker.ld)
+target_link_libraries(Loader Limine)

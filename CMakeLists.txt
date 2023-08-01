@@ -7,6 +7,7 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_subdirectory(Tools)
+
 # Kernel & Modules
 add_subdirectory(Modules)
-add_subdirectory(Tools)

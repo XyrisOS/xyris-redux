@@ -1,44 +1,57 @@
+/* Taken from the Limine barebones repository */
+/* https://github.com/limine-bootloader/ */
+OUTPUT_FORMAT(elf64-x86-64)
 ENTRY(loader_main)
+
+/* Define the program headers we want so the bootloader gives us the right */
+/* MMU permissions */
+PHDRS
+{
+    text    PT_LOAD    FLAGS((1 << 0) | (1 << 2)) ; /* Execute + Read */
+    rodata  PT_LOAD    FLAGS((1 << 2)) ;            /* Read only */
+    data    PT_LOAD    FLAGS((1 << 1) | (1 << 2)) ; /* Write + Read */
+    dynamic PT_DYNAMIC FLAGS((1 << 1) | (1 << 2)) ; /* Dynamic PHDR for relocations */
+}
+
 SECTIONS
 {
-    KERNEL_VMA = 0xFFFF800000000000;
-    . = KERNEL_VMA;
+    . = 0xffffffff80000000;
 
-    .text : AT(ADDR(.text) - KERNEL_VMA)
-    {
-        _code = .;
-        *(.text)
-        *(.rodata*)
-        . = ALIGN(4096);
-    }
+    .text : {
+        *(.text .text.*)
+    } :text
 
-   .data : AT(ADDR(.data) - KERNEL_VMA)
-   {
-        _data = .;
-        *(.data)
-        . = ALIGN(4096);
-   }
+    /* Move to the next memory page for .rodata */
+    . += CONSTANT(MAXPAGESIZE);
 
-   .eh_frame : AT(ADDR(.eh_frame) - KERNEL_VMA)
-   {
-       _ehframe = .;
-       *(.eh_frame)
-        . = ALIGN(4096);
-   }
+    .rodata : {
+        *(.rodata .rodata.*)
+    } :rodata
 
-   .bss : AT(ADDR(.bss) - KERNEL_VMA)
-   {
-       _bss = .;
-       *(.bss)
+    /* Move to the next memory page for .data */
+    . += CONSTANT(MAXPAGESIZE);
 
+    .data : {
+        *(.data .data.*)
+    } :data
+
+    /* Dynamic section for relocations, both in its own PHDR and inside data PHDR */
+    .dynamic : {
+        *(.dynamic)
+    } :data :dynamic
+
+    /* NOTE: .bss needs to be the last thing mapped to :data, otherwise lots of */
+    /* unnecessary zeros will be written to the binary. */
+    /* If you need, for example, .init_array and .fini_array, those should be placed */
+    /* above this. */
+    .bss : {
+        *(.bss .bss.*)
         *(COMMON)
-       . = ALIGN(4096);
-   }
+    } :data
 
-   _end = .;
-
-   /DISCARD/ :
-   {
-        *(.comment)
-   }
+    /* Discard .note.* and .eh_frame since they may cause issues on some hosts. */
+    /DISCARD/ : {
+        *(.eh_frame)
+        *(.note .note.*)
+    }
 }

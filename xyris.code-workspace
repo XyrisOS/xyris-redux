@@ -49,5 +49,5 @@
         "[markdown]": {
             "files.trimTrailingWhitespace": false
         },
-    }
+    },
 }
