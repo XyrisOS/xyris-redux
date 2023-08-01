@@ -7,3 +7,4 @@ add_library(Loader STATIC
 )
 
 target_link_libraries(Loader Limine)
+target_include_directories(Loader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -1,3 +1,15 @@
+/**
+ * @file Entry.cpp
+ * @author Keeton Feavel (keeton@xyr.is)
+ * @brief Kernel loader translation layer
+ * @version 0.1
+ * @date 2023-07-31
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
+#include <Entry.hpp>
 #include <stddef.h>
 #include <stdint.h>
 #include <limine.h>
@@ -33,5 +45,5 @@ extern "C" void loader_main(void) {
         fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xffffff;
     }
 
-    hcf();
+    kernel_main();
 }
