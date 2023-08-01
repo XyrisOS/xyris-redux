@@ -32,9 +32,6 @@
         ]
     },
     "settings": {
-        // C / C++
-        "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-
         // CMake
         "cmake.buildDirectory": "${workspaceFolder}/Build",
         "cmake.showSystemKits": false,
