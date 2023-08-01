@@ -1,4 +1,4 @@
-ENTRY(_start)
+ENTRY(loader_main)
 SECTIONS
 {
     KERNEL_VMA = 0xFFFF800000000000;
