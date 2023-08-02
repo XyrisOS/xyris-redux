@@ -79,35 +79,47 @@ image_stage() {
         exit
     fi
 
-    local image="${DIR_INSTALL}/boot.img"
-    if [ -e "${image}" ]; then
-        echo -e "${yellow}Removing old '${image}'...${no_color}"
-        rm "${image:?}"
-    fi
-
     # Darwin uses BSD style `dd` so we need to adjust some flags
     local bs="1M"
     if [ "$(uname)" = "Darwin" ]; then
         bs="1m"
     fi
 
-    # FIXME:
-    # Eventually we want to keep the kernel in a separate `boot` partition,
-    # but for now it's easiest to just make one partition since we can't
-    # have multiple while we're using `mtools`
+    # FIXME: Migrate to `mpartition`
+
+    # ------- Limine UEFI -------
 
     # 100 Mb is the minimum recommended size by most UEFI compatible systems
     # Linux and Windows tend to be around 512 Mb whereas macOS is 200 Mb.
     # We have no need for all that space, so for now we break convention.
-    dd if=/dev/zero of="${image}" bs="${bs}" count=32
     # 53 cylinders ~= 32 Mb
-    echo "Formatting ${image}..."
-    mformat -i "${image}" -t 53 ::
-    mmd -i "${image}" ::/EFI
-    mmd -i "${image}" ::/EFI/BOOT
-    mcopy -i "${image}" "${kernel_bin}" ::
-    mcopy -i "${image}" "${limime_efi}" ::/EFI/BOOT
-    mcopy -i "${image}" "${limine_cfg}" ::/EFI/BOOT
+
+    local image_efi="${DIR_INSTALL}/efi.img"
+    if [ -e "${image_efi}" ]; then
+        echo -e "${yellow}Removing old '${image_efi}'...${no_color}"
+        rm "${image_efi:?}"
+    fi
+
+    dd if=/dev/zero of="${image_efi}" bs="${bs}" count=32
+    echo "Formatting ${image_efi}..."
+    mformat -i "${image_efi}" -t 53 ::
+    mmd -i "${image_efi}" ::/EFI
+    mmd -i "${image_efi}" ::/EFI/BOOT
+    mcopy -i "${image_efi}" "${limime_efi}" ::/EFI/BOOT
+    mcopy -i "${image_efi}" "${limine_cfg}" ::/EFI/BOOT
+
+    # ------- Kernel -------
+
+    local image_boot="${DIR_INSTALL}/boot.img"
+    if [ -e "${image_boot}" ]; then
+        echo -e "${yellow}Removing old '${image_boot}'...${no_color}"
+        rm "${image_boot:?}"
+    fi
+
+    dd if=/dev/zero of="${image_boot}" bs="${bs}" count=32
+    echo "Formatting ${image_boot}..."
+    mformat -i "${image_boot}" -t 53 ::
+    mcopy -i "${image_boot}" "${kernel_bin}" ::
 }
 
 while :; do
