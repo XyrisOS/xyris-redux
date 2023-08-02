@@ -10,22 +10,35 @@
             {
                 "type": "shell",
                 "label": "Build",
-                "command": "scuba",
-                "args": [
-                    "build"
-                ],
+                "command": "./build.sh",
                 "group": {
                     "kind": "build",
                     "isDefault": true
                 },
-                "problemMatcher": [ "$gcc" ]
+                "problemMatcher": [
+                    "$gcc"
+                ]
+            },
+            {
+                "type": "shell",
+                "label": "Build (Image)",
+                "command": "./build.sh",
+                "group": {
+                    "kind": "build"
+                },
+                "args": [
+                    "--image"
+                ],
+                "problemMatcher": [
+                    "$gcc"
+                ]
             },
             {
                 "type": "shell",
                 "label": "Clean",
-                "command": "scuba",
+                "command": "./build.sh",
                 "args": [
-                    "clean"
+                    "--clean"
                 ],
                 "problemMatcher": []
             }
