@@ -1,7 +1,7 @@
 /* Taken from the Limine barebones repository */
 /* https://github.com/limine-bootloader/ */
 OUTPUT_FORMAT(elf64-x86-64)
-ENTRY(loader_main)
+ENTRY(LoaderEntry)
 
 /* Define the program headers we want so the bootloader gives us the right */
 /* MMU permissions */

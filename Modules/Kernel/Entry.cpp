@@ -11,15 +11,11 @@
 
 #include <Entry.hpp>
 
-static void hcf(void);
+namespace Kernel
+{
 
-static void hcf(void) {
-    asm ("cli");
-    for (;;) {
-        asm ("hlt");
-    }
+void Entry(void) {
+    Loader::HaltAndCatchFire();
 }
 
-void kernel_main(void) {
-    hcf();
 }
