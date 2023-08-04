@@ -10,12 +10,14 @@
  */
 
 #include <Entry.hpp>
+#include <Arch.hpp>
 
 namespace Kernel
 {
 
 void Entry(void) {
-    Loader::HaltAndCatchFire();
+    Arch::Initialize();
+    Loader::ShowProgress();
 }
 
 }

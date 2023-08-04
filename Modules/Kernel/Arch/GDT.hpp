@@ -67,6 +67,6 @@ struct [[gnu::packed]] Entry {
 };
 static_assert(sizeof(struct Entry) == 16);
 
-void Init(void);
+void Initialize(void);
 
 }

@@ -15,9 +15,9 @@
 namespace Arch
 {
 
-void Init(void)
+void Initialize(void)
 {
-    GDT::Init();
+    GDT::Initialize();
 }
 
 }

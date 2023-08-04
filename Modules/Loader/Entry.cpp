@@ -34,6 +34,19 @@ void HaltAndCatchFire(void) {
     }
 }
 
+
+void ShowProgress(void)
+{
+    // Fetch the first framebuffer.
+    struct limine_framebuffer *framebuffer = framebufferRequest.response->framebuffers[0];
+
+    // Note: we assume the framebuffer model is RGB with 32-bit pixels.
+    for (size_t i = 100; i > 0; i--) {
+        uint32_t* fb_ptr = reinterpret_cast<uint32_t*>(framebuffer->address);
+        fb_ptr[i] = 0xff0000;
+    }
+}
+
 }
 
 

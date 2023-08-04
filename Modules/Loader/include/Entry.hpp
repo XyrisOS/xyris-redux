@@ -34,4 +34,6 @@ namespace Loader
 [[noreturn]]
 void HaltAndCatchFire(void);
 
+void ShowProgress(void);
+
 }

@@ -29,7 +29,7 @@ static void Flush(void)
 }
 
 
-void Init(void)
+void Initialize(void)
 {
     // FIXME: Many of these segments are nearly identical.
     //        Create common definitions that can be used and
