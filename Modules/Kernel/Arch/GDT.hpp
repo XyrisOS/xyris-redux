@@ -15,6 +15,11 @@
 namespace GDT
 {
 
+struct GDTR {
+    uint16_t size   : 16;
+    uintptr_t addr  : 64;
+} __attribute__((packed));
+
 union Limit {
     struct [[gnu::packed]] LimitSections
     {
@@ -28,8 +33,8 @@ union Base {
     struct [[gnu::packed]] BaseSections
     {
         uint32_t low    : 24;
-        uint8_t high    : 8;
-        uint32_t higher : 32;
+        uint8_t mid    : 8;
+        uint32_t high : 32;
     } section;
     uint32_t value;
 };
@@ -48,16 +53,16 @@ struct [[gnu::packed]] Entry {
     uint8_t privilege       : 2;    // Privilege level (rings 0-3)
     uint8_t present         : 1;    // Indicates entry is available (default to 1)
     // Limit
-    uint8_t limitHigh       : 4;
+    uint8_t limitHigh       : 4;    // Ignored
     // Flags
     uint8_t reserved        : 1;    // Reserved (default to 0)
     uint8_t longMode        : 1;    // Indicates a long mode (64-bit) code segment if set
     uint8_t size            : 1;    // Indicates a 32-bit (1) or 16-bit (0) protected mode segment
     uint8_t granulatity     : 1;    // Indicates page granularity if set (otherwise byte granularity)
     // Base
-    uint8_t baseHigh        : 8;
+    uint8_t baseMid         : 8;
     // x86_64 extended
-    uint32_t baseHigher     : 32;
+    uint32_t baseHigh       : 32;
     uint32_t reservedHigh   : 32;   // x86_64 reserved space
 };
 static_assert(sizeof(struct Entry) == 16);
