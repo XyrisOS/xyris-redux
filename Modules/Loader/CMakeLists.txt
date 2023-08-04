@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.27)
 project(Loader)
-message(STATUS "\t[-] Loader")
+message(STATUS "  [-] Loader")
 
-add_library(Loader STATIC
+add_library(Loader OBJECT
     Entry.cpp
 )
 
