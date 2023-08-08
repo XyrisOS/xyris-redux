@@ -13,7 +13,7 @@ COPY build-gcc.sh /tmp/build-gcc.sh
 RUN /tmp/build-binutils.sh
 RUN /tmp/build-gcc.sh
 
-ARG BUILD_PKGS="cmake ninja nasm mold"
+ARG BUILD_PKGS="bash cmake ninja nasm mold"
 ARG UTIL_PKGS="git gdb-multiarch"
 ARG DOCS_PKGS="doxygen graphviz jq"
 
