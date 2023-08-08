@@ -5,6 +5,7 @@ message(STATUS "    [-] Arch")
 add_library(Arch OBJECT
     Arch.cpp
     GDT.cpp
+    GDT.asm
 )
 
 # TODO: I have yet to decide if / how I want to go about public v. private headers

@@ -12,6 +12,9 @@
 #include "GDT.hpp"
 #include <stddef.h>
 
+// Implemented by GDT.asm
+extern "C" void FlushGDT();
+
 namespace GDT
 {
 
@@ -26,6 +29,7 @@ static void Flush(void)
     gdtr.size = sizeof(gdt) - 1;
     gdtr.addr = reinterpret_cast<uintptr_t>(&gdt);
     asm volatile("lgdt %0" ::"m"(gdtr) : "memory");
+    FlushGDT();
 }
 
 
