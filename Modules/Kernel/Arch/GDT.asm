@@ -6,17 +6,19 @@
 section .text
 bits 64
 align 4
-; FIXME: Explain why / how the magic 0x08 and 0x10 are working
+GDT_ENTRY_SIZE equ 8
 
 global GDT_Flush
 GDT_Flush:
     lgdt [rdi]
-    mov ax, 0x10        ; Kernel data segment
+    ; Kernel data segment (index 2)
+    mov ax, (2 * GDT_ENTRY_SIZE)
     mov ss, ax
     mov ds, ax
     mov es, ax
     mov rax, qword .blj ; Yahoo
-    push qword 0x8      ; Kernel code segment
+    ; Kernel code segment (index 1)
+    push qword (1 * GDT_ENTRY_SIZE)
     push rax
     o64 retf
 
