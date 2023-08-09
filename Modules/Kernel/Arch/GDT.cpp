@@ -13,7 +13,7 @@
 #include <stddef.h>
 
 // Implemented by GDT.asm
-extern "C" void FlushGDT();
+extern "C" void GDT_Flush(void* pGDTR);
 
 namespace GDT
 {
@@ -23,13 +23,12 @@ struct Entry gdt[gdtMaxEntries];
 struct GDTR gdtr;
 
 
-static void Flush(void)
+static void CommitAndFlush(void)
 {
     // Update GDT register and flush
     gdtr.size = sizeof(gdt) - 1;
     gdtr.addr = reinterpret_cast<uintptr_t>(&gdt);
-    asm volatile("lgdt %0" ::"m"(gdtr) : "memory");
-    FlushGDT();
+    GDT_Flush(reinterpret_cast<void*>(&gdtr));
 }
 
 
@@ -55,15 +54,11 @@ void Initialize(void)
         .longMode = 0,
         .size = 0,
         .granulatity = 0,
-        .baseMid = nullSegmentBase.section.mid,
         .baseHigh = nullSegmentBase.section.high,
-        .reservedHigh = 0,
     };
 
-    // Kernel
-
     const union Base kernelCodeBase = { .value = 0 };
-    const union Limit kernelCodeLimit = { .value = 0x00FFFFFF };
+    const union Limit kernelCodeLimit = { .value = 0x000FFFFF };
     gdt[index++] = {
         .limitLow = kernelCodeLimit.section.low,
         .baseLow = kernelCodeBase.section.low,
@@ -76,16 +71,14 @@ void Initialize(void)
         .present = 1,
         .limitHigh = kernelCodeLimit.section.high,
         .reserved = 0,
-        .longMode = 1,
-        .size = 0,
+        .longMode = 0,
+        .size = 1,
         .granulatity = 1,
-        .baseMid = kernelCodeBase.section.mid,
         .baseHigh = kernelCodeBase.section.high,
-        .reservedHigh = 0,
     };
 
     const union Base kernelDataBase = { .value = 0 };
-    const union Limit kernelDataLimit = { .value = 0x00FFFFFF };
+    const union Limit kernelDataLimit = { .value = 0x000FFFFF };
     gdt[index++] = {
         .limitLow = kernelDataLimit.section.low,
         .baseLow = kernelDataBase.section.low,
@@ -101,18 +94,14 @@ void Initialize(void)
         .longMode = 0,
         .size = 1,
         .granulatity = 1,
-        .baseMid = kernelDataBase.section.mid,
         .baseHigh = kernelDataBase.section.high,
-        .reservedHigh = 0,
     };
 
-    // Userspace
-
-    const union Base userspaceCodeBase = { .value = 0 };
-    const union Limit userspaceCodeLimit = { .value = 0x00FFFFFF };
+    const union Base userCodeBase = { .value = 0 };
+    const union Limit userCodeLimit = { .value = 0x000FFFFF };
     gdt[index++] = {
-        .limitLow = userspaceCodeLimit.section.low,
-        .baseLow = userspaceCodeBase.section.low,
+        .limitLow = userCodeLimit.section.low,
+        .baseLow = userCodeBase.section.low,
         .accessed = 0,
         .rw = 1,
         .dc = 0,
@@ -120,21 +109,19 @@ void Initialize(void)
         .system = 1,
         .privilege = 3,
         .present = 1,
-        .limitHigh = userspaceCodeLimit.section.high,
+        .limitHigh = userCodeLimit.section.high,
         .reserved = 0,
-        .longMode = 1,
-        .size = 0,
+        .longMode = 0,
+        .size = 1,
         .granulatity = 1,
-        .baseMid = userspaceCodeBase.section.mid,
-        .baseHigh = userspaceCodeBase.section.high,
-        .reservedHigh = 0,
+        .baseHigh = userCodeBase.section.high,
     };
 
-    const union Base userspaceDataBase = { .value = 0 };
-    const union Limit userspaceDataLimit = { .value = 0xFFFF };
+    const union Base userDataBase = { .value = 0 };
+    const union Limit userDataLimit = { .value = 0x000FFFFF };
     gdt[index++] = {
-        .limitLow = userspaceDataLimit.section.low,
-        .baseLow = userspaceDataBase.section.low,
+        .limitLow = userDataLimit.section.low,
+        .baseLow = userDataBase.section.low,
         .accessed = 0,
         .rw = 1,
         .dc = 0,
@@ -142,17 +129,15 @@ void Initialize(void)
         .system = 1,
         .privilege = 3,
         .present = 1,
-        .limitHigh = userspaceDataLimit.section.high,
+        .limitHigh = userDataLimit.section.high,
         .reserved = 0,
         .longMode = 0,
         .size = 1,
         .granulatity = 1,
-        .baseMid = userspaceDataBase.section.mid,
-        .baseHigh = userspaceDataBase.section.high,
-        .reservedHigh = 0,
+        .baseHigh = userDataBase.section.high,
     };
 
-    Flush();
+    CommitAndFlush();
 }
 
 }

@@ -32,9 +32,8 @@ union Limit {
 union Base {
     struct [[gnu::packed]] BaseSections
     {
-        uint32_t low    : 24;
-        uint8_t mid    : 8;
-        uint32_t high : 32;
+        uint32_t low : 24;
+        uint8_t high : 8;
     } section;
     uint32_t value;
 };
@@ -60,12 +59,9 @@ struct [[gnu::packed]] Entry {
     uint8_t size            : 1;    // Indicates a 32-bit (1) or 16-bit (0) protected mode segment
     uint8_t granulatity     : 1;    // Indicates page granularity if set (otherwise byte granularity)
     // Base
-    uint8_t baseMid         : 8;
-    // x86_64 extended
-    uint32_t baseHigh       : 32;
-    uint32_t reservedHigh   : 32;   // x86_64 reserved space
+    uint8_t baseHigh        : 8;
 };
-static_assert(sizeof(struct Entry) == 16);
+static_assert(sizeof(struct Entry) == 8);
 
 void Initialize(void);
 
