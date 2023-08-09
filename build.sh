@@ -13,6 +13,8 @@ yellow="\033[1;33m"
 no_color="\033[0m"
 
 do_image_stage=1
+do_run_stage=0
+do_run_stage_debug=0
 
 show_help() {
     echo -e "TODO"
@@ -122,6 +124,40 @@ image_stage() {
     mcopy -i "${image_boot}" "${kernel_bin}" ::
 }
 
+run_stage() {
+    if [ ! "$(command -v qemu-system-x86_64)" ]; then
+        echo -e "${light_red}Did not find 'qemu-system-x86_64' in \$PATH.${no_color}"
+        return
+    fi
+
+    # shellcheck disable=SC2054
+    local arguments=(
+        -bios Tools/OVMF.bin
+        -device ide-cd,bus=ide.0,drive=efi,bootindex=0
+        -drive if=none,media=cdrom,id=efi,file=Distribution/efi.img
+        -device ide-cd,bus=ide.1,drive=boot,bootindex=1
+        -drive if=none,media=cdrom,id=boot,file=Distribution/boot.img
+        -m 4G
+        -rtc clock=host
+        -serial stdio
+        -monitor telnet:127.0.0.1:1234,server,nowait
+    )
+
+    if [ $do_run_stage_debug = 1 ]; then
+        echo
+        echo -e "${light_blue}Attach to qemu with GDB${no_color}"
+        echo
+        echo -e "${yellow}set arch x86-64:intel${no_color}"
+        echo -e "${yellow}target remote localhost:1234${no_color}"
+        echo
+        arguments+=(-S)
+        arguments+=(-s)
+    fi
+
+    echo -e "${light_blue}Starting qemu...${no_color}"
+    qemu-system-x86_64 "${arguments[@]}"
+}
+
 while :; do
     case $1 in
         -h|-\?|--help)
@@ -132,8 +168,15 @@ while :; do
             clean_stage
             exit
             ;;
+        -d|--debug)
+            do_run_stage=1
+            do_run_stage_debug=1
+            ;;
         -k|--kernel-only)
             do_image_stage=0
+            ;;
+        -r|--run)
+            do_run_stage=1
             ;;
         --)
             # End of all options.
@@ -156,4 +199,7 @@ done
 build_stage
 if [ $do_image_stage = 1 ]; then
     image_stage
+fi
+if [ $do_run_stage = 1 ]; then
+    run_stage
 fi
