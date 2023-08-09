@@ -18,10 +18,62 @@ extern "C" void GDT_Flush(void* pGDTR);
 namespace GDT
 {
 
+// Types
+
+struct GDTR {
+    uint16_t size   : 16;
+    uintptr_t addr  : 64;
+} __attribute__((packed));
+
+union Limit {
+    struct [[gnu::packed]] LimitSections
+    {
+        uint16_t low : 16;
+        uint8_t high : 4;
+    } section;
+    uint32_t value;
+};
+
+union Base {
+    struct [[gnu::packed]] BaseSections
+    {
+        uint32_t low : 24;
+        uint8_t high : 8;
+    } section;
+    uint32_t value;
+};
+
+struct [[gnu::packed]] Entry {
+    // Limit
+    uint16_t limitLow       : 16;
+    // Base
+    uint32_t baseLow        : 24;
+    // Access byte
+    uint8_t accessed        : 1;    // Accessed indicator (default to 0)
+    uint8_t rw              : 1;    // Readable (code segment) / writeable bit (data segment)
+    uint8_t dc              : 1;    // Conforming (code segment) / direction (data segment)
+    uint8_t executable      : 1;    // Code (1) or data (0)
+    uint8_t system          : 1;    // Task segment (0) or code/data segment (1)
+    uint8_t privilege       : 2;    // Privilege level (rings 0-3)
+    uint8_t present         : 1;    // Indicates entry is available (default to 1)
+    // Limit
+    uint8_t limitHigh       : 4;    // Ignored
+    // Flags
+    uint8_t reserved        : 1;    // Reserved (default to 0)
+    uint8_t longMode        : 1;    // Indicates a long mode (64-bit) code segment if set
+    uint8_t size            : 1;    // Indicates a 32-bit (1) or 16-bit (0) protected mode segment
+    uint8_t granulatity     : 1;    // Indicates page granularity if set (otherwise byte granularity)
+    // Base
+    uint8_t baseHigh        : 8;
+};
+
+// Variables
+
 const size_t gdtMaxEntries = 5;
 struct Entry gdt[gdtMaxEntries];
 struct GDTR gdtr;
 
+// Functions
 
 static void CommitAndFlush(void)
 {
@@ -34,34 +86,19 @@ static void CommitAndFlush(void)
 
 void Initialize(void)
 {
+    size_t index = 0;
+    const union Base base = { .value = 0 };
+    const union Limit limit = { .value = 0x000FFFFF };
+
     // Null segment
 
-    size_t index = 0;
-    const union Base nullSegmentBase = { .value = 0 };
-    const union Limit nullSegmentLimit = { .value = 0 };
-    gdt[index++] = {
-        .limitLow = nullSegmentLimit.section.low,
-        .baseLow = nullSegmentBase.section.low,
-        .accessed = 0,
-        .rw = 0,
-        .dc = 0,
-        .executable = 0,
-        .system = 0,
-        .privilege = 0,
-        .present = 0,
-        .limitHigh = nullSegmentLimit.section.high,
-        .reserved = 0,
-        .longMode = 0,
-        .size = 0,
-        .granulatity = 0,
-        .baseHigh = nullSegmentBase.section.high,
-    };
+    gdt[index++] = Entry();
 
-    const union Base kernelCodeBase = { .value = 0 };
-    const union Limit kernelCodeLimit = { .value = 0x000FFFFF };
+    // Kernel
+
     gdt[index++] = {
-        .limitLow = kernelCodeLimit.section.low,
-        .baseLow = kernelCodeBase.section.low,
+        .limitLow = limit.section.low,
+        .baseLow = base.section.low,
         .accessed = 0,
         .rw = 1,
         .dc = 0,
@@ -69,19 +106,17 @@ void Initialize(void)
         .system = 1,
         .privilege = 0,
         .present = 1,
-        .limitHigh = kernelCodeLimit.section.high,
+        .limitHigh = limit.section.high,
         .reserved = 0,
         .longMode = 0,
         .size = 1,
         .granulatity = 1,
-        .baseHigh = kernelCodeBase.section.high,
+        .baseHigh = base.section.high,
     };
 
-    const union Base kernelDataBase = { .value = 0 };
-    const union Limit kernelDataLimit = { .value = 0x000FFFFF };
     gdt[index++] = {
-        .limitLow = kernelDataLimit.section.low,
-        .baseLow = kernelDataBase.section.low,
+        .limitLow = limit.section.low,
+        .baseLow = base.section.low,
         .accessed = 0,
         .rw = 1,
         .dc = 0,
@@ -89,19 +124,19 @@ void Initialize(void)
         .system = 1,
         .privilege = 0,
         .present = 1,
-        .limitHigh = kernelDataLimit.section.high,
+        .limitHigh = limit.section.high,
         .reserved = 0,
         .longMode = 0,
         .size = 1,
         .granulatity = 1,
-        .baseHigh = kernelDataBase.section.high,
+        .baseHigh = base.section.high,
     };
 
-    const union Base userCodeBase = { .value = 0 };
-    const union Limit userCodeLimit = { .value = 0x000FFFFF };
+    // Userspace
+
     gdt[index++] = {
-        .limitLow = userCodeLimit.section.low,
-        .baseLow = userCodeBase.section.low,
+        .limitLow = limit.section.low,
+        .baseLow = base.section.low,
         .accessed = 0,
         .rw = 1,
         .dc = 0,
@@ -109,19 +144,17 @@ void Initialize(void)
         .system = 1,
         .privilege = 3,
         .present = 1,
-        .limitHigh = userCodeLimit.section.high,
+        .limitHigh = limit.section.high,
         .reserved = 0,
         .longMode = 0,
         .size = 1,
         .granulatity = 1,
-        .baseHigh = userCodeBase.section.high,
+        .baseHigh = base.section.high,
     };
 
-    const union Base userDataBase = { .value = 0 };
-    const union Limit userDataLimit = { .value = 0x000FFFFF };
     gdt[index++] = {
-        .limitLow = userDataLimit.section.low,
-        .baseLow = userDataBase.section.low,
+        .limitLow = limit.section.low,
+        .baseLow = base.section.low,
         .accessed = 0,
         .rw = 1,
         .dc = 0,
@@ -129,12 +162,12 @@ void Initialize(void)
         .system = 1,
         .privilege = 3,
         .present = 1,
-        .limitHigh = userDataLimit.section.high,
+        .limitHigh = limit.section.high,
         .reserved = 0,
         .longMode = 0,
         .size = 1,
         .granulatity = 1,
-        .baseHigh = userDataBase.section.high,
+        .baseHigh = base.section.high,
     };
 
     CommitAndFlush();
