@@ -41,6 +41,15 @@
                     "--clean"
                 ],
                 "problemMatcher": []
+            },
+            {
+                "type": "shell",
+                "label": "Run (No Debug)",
+                "command": "./build.sh",
+                "args": [
+                    "--run"
+                ],
+                "problemMatcher": []
             }
         ]
     },
