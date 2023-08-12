@@ -20,8 +20,8 @@ namespace GDT
 union Limit {
     struct [[gnu::packed]] LimitSections
     {
-        uint16_t low : 16;
-        uint8_t high : 4;
+        int low     : 16;
+        int high    : 4;
     } section;
     uint32_t value;
 };
@@ -29,34 +29,34 @@ union Limit {
 union Base {
     struct [[gnu::packed]] BaseSections
     {
-        uint32_t low : 24;
-        uint8_t high : 8;
+        int low     : 24;
+        int high    : 8;
     } section;
     uint32_t value;
 };
 
 struct [[gnu::packed]] Entry {
     // Limit
-    uint16_t limitLow       : 16;
+    int limitLow        : 16;
     // Base
-    uint32_t baseLow        : 24;
+    int baseLow         : 24;
     // Access byte
-    uint8_t accessed        : 1;    // Accessed indicator (default to 0)
-    uint8_t rw              : 1;    // Readable (code segment) / writeable bit (data segment)
-    uint8_t dc              : 1;    // Conforming (code segment) / direction (data segment)
-    uint8_t executable      : 1;    // Code (1) or data (0)
-    uint8_t system          : 1;    // Task segment (0) or code/data segment (1)
-    uint8_t privilege       : 2;    // Privilege level (rings 0-3)
-    uint8_t present         : 1;    // Indicates entry is available (default to 1)
+    int accessed        : 1;    // Accessed indicator (default to 0)
+    int rw              : 1;    // Readable (code segment) / writeable bit (data segment)
+    int dc              : 1;    // Conforming (code segment) / direction (data segment)
+    int executable      : 1;    // Code (1) or data (0)
+    int system          : 1;    // Task segment (0) or code/data segment (1)
+    int privilege       : 2;    // Privilege level (rings 0-3)
+    int present         : 1;    // Indicates entry is available (default to 1)
     // Limit
-    uint8_t limitHigh       : 4;    // Ignored
+    int limitHigh       : 4;    // Ignored
     // Flags
-    uint8_t reserved        : 1;    // Reserved (default to 0)
-    uint8_t longMode        : 1;    // Indicates a long mode (64-bit) code segment if set
-    uint8_t size            : 1;    // Indicates a 32-bit (1) or 16-bit (0) protected mode segment
-    uint8_t granulatity     : 1;    // Indicates page granularity if set (otherwise byte granularity)
+    int reserved        : 1;    // Reserved (default to 0)
+    int longMode        : 1;    // Indicates a long mode (64-bit) code segment if set
+    int size            : 1;    // Indicates a 32-bit (1) or 16-bit (0) protected mode segment
+    int granulatity     : 1;    // Indicates page granularity if set (otherwise byte granularity)
     // Base
-    uint8_t baseHigh        : 8;
+    int baseHigh        : 8;
 };
 
 struct [[gnu::packed]] GDT {
@@ -65,6 +65,14 @@ struct [[gnu::packed]] GDT {
     Entry kernelData;
     Entry userCode;
     Entry userData;
+
+    GDT()
+        : null(Entry())
+        , kernelCode(Entry())
+        , kernelData(Entry())
+        , userCode(Entry())
+        , userData(Entry())
+    { /* Stubbed */}
 };
 
 struct [[gnu::packed]] GDTR {
@@ -82,7 +90,6 @@ static struct GDTR gdtr;
 // Implemented by GDT.asm
 extern "C" void GDT_Flush(struct GDTR* pGDTR);
 
-
 static void CommitAndFlush(void)
 {
     // Update GDT register and flush
@@ -94,91 +101,42 @@ static void CommitAndFlush(void)
     GDT_Flush(&gdtr);
 }
 
+static void CreateEntry(
+    Entry &entry,
+    const Base &base,
+    const Limit &limit,
+    const bool executable,
+    const uint8_t privilege)
+{
+    entry = {
+        .limitLow = limit.section.low,
+        .baseLow = base.section.low,
+        .accessed = 0,
+        .rw = 1,
+        .dc = 0,
+        .executable = (executable ? 1 : 0),
+        .system = 1,
+        .privilege = privilege,
+        .present = 1,
+        .limitHigh = limit.section.high,
+        .reserved = 0,
+        .longMode = 0,
+        .size = 1,
+        .granulatity = 1,
+        .baseHigh = base.section.high,
+    };
+}
 
 void Initialize(void)
 {
+    // Base and limit are the same for all entries on x86_64
     const union Base base = { .value = 0 };
     const union Limit limit = { .value = 0x000FFFFF };
 
-    // Null segment
-
-    gdt.null = Entry();
-
-    // Kernel
-
-    gdt.kernelCode = {
-        .limitLow = limit.section.low,
-        .baseLow = base.section.low,
-        .accessed = 0,
-        .rw = 1,
-        .dc = 0,
-        .executable = 1,
-        .system = 1,
-        .privilege = 0,
-        .present = 1,
-        .limitHigh = limit.section.high,
-        .reserved = 0,
-        .longMode = 0,
-        .size = 1,
-        .granulatity = 1,
-        .baseHigh = base.section.high,
-    };
-
-    gdt.kernelData = {
-        .limitLow = limit.section.low,
-        .baseLow = base.section.low,
-        .accessed = 0,
-        .rw = 1,
-        .dc = 0,
-        .executable = 0,
-        .system = 1,
-        .privilege = 0,
-        .present = 1,
-        .limitHigh = limit.section.high,
-        .reserved = 0,
-        .longMode = 0,
-        .size = 1,
-        .granulatity = 1,
-        .baseHigh = base.section.high,
-    };
-
-    // Userspace
-
-    gdt.userCode = {
-        .limitLow = limit.section.low,
-        .baseLow = base.section.low,
-        .accessed = 0,
-        .rw = 1,
-        .dc = 0,
-        .executable = 1,
-        .system = 1,
-        .privilege = 3,
-        .present = 1,
-        .limitHigh = limit.section.high,
-        .reserved = 0,
-        .longMode = 0,
-        .size = 1,
-        .granulatity = 1,
-        .baseHigh = base.section.high,
-    };
-
-    gdt.userData = {
-        .limitLow = limit.section.low,
-        .baseLow = base.section.low,
-        .accessed = 0,
-        .rw = 1,
-        .dc = 0,
-        .executable = 0,
-        .system = 1,
-        .privilege = 3,
-        .present = 1,
-        .limitHigh = limit.section.high,
-        .reserved = 0,
-        .longMode = 0,
-        .size = 1,
-        .granulatity = 1,
-        .baseHigh = base.section.high,
-    };
+    CreateEntry(gdt.kernelCode, base, limit, true, 0);
+    CreateEntry(gdt.kernelData, base, limit, false, 0);
+    CreateEntry(gdt.userCode, base, limit, true, 3);
+    CreateEntry(gdt.userData, base, limit, false, 3);
 
     CommitAndFlush();
 }

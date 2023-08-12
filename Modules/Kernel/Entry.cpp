@@ -18,6 +18,10 @@ namespace Kernel
 void Entry(void) {
     Arch::Initialize();
     Loader::ShowProgress();
+
+    // Loop on tasks
+
+    Loader::HaltAndCatchFire();
 }
 
 }
