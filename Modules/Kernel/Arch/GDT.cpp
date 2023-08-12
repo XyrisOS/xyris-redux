@@ -12,18 +12,10 @@
 #include "GDT.hpp"
 #include <stddef.h>
 
-// Implemented by GDT.asm
-extern "C" void GDT_Flush(void* pGDTR);
-
 namespace GDT
 {
 
 // Types
-
-struct GDTR {
-    uint16_t size   : 16;
-    uintptr_t addr  : 64;
-} __attribute__((packed));
 
 union Limit {
     struct [[gnu::packed]] LimitSections
@@ -67,36 +59,54 @@ struct [[gnu::packed]] Entry {
     uint8_t baseHigh        : 8;
 };
 
+struct [[gnu::packed]] GDT {
+    Entry null;
+    Entry kernelCode;
+    Entry kernelData;
+    Entry userCode;
+    Entry userData;
+};
+
+struct [[gnu::packed]] GDTR {
+    uint16_t size;
+    struct GDT* addr;
+};
+
 // Variables
 
-const size_t gdtMaxEntries = 5;
-struct Entry gdt[gdtMaxEntries];
-struct GDTR gdtr;
+static struct GDT gdt;
+static struct GDTR gdtr;
 
 // Functions
+
+// Implemented by GDT.asm
+extern "C" void GDT_Flush(struct GDTR* pGDTR);
+
 
 static void CommitAndFlush(void)
 {
     // Update GDT register and flush
-    gdtr.size = sizeof(gdt) - 1;
-    gdtr.addr = reinterpret_cast<uintptr_t>(&gdt);
-    GDT_Flush(reinterpret_cast<void*>(&gdtr));
+    gdtr = {
+        .size = sizeof(gdt) - 1,
+        .addr = &gdt,
+    };
+
+    GDT_Flush(&gdtr);
 }
 
 
 void Initialize(void)
 {
-    size_t index = 0;
     const union Base base = { .value = 0 };
     const union Limit limit = { .value = 0x000FFFFF };
 
     // Null segment
 
-    gdt[index++] = Entry();
+    gdt.null = Entry();
 
     // Kernel
 
-    gdt[index++] = {
+    gdt.kernelCode = {
         .limitLow = limit.section.low,
         .baseLow = base.section.low,
         .accessed = 0,
@@ -114,7 +124,7 @@ void Initialize(void)
         .baseHigh = base.section.high,
     };
 
-    gdt[index++] = {
+    gdt.kernelData = {
         .limitLow = limit.section.low,
         .baseLow = base.section.low,
         .accessed = 0,
@@ -134,7 +144,7 @@ void Initialize(void)
 
     // Userspace
 
-    gdt[index++] = {
+    gdt.userCode = {
         .limitLow = limit.section.low,
         .baseLow = base.section.low,
         .accessed = 0,
@@ -152,7 +162,7 @@ void Initialize(void)
         .baseHigh = base.section.high,
     };
 
-    gdt[index++] = {
+    gdt.userData = {
         .limitLow = limit.section.low,
         .baseLow = base.section.low,
         .accessed = 0,
