@@ -1,6 +1,6 @@
 /**
  * @file GDT.cpp
- * @author Keeton Feavel (keeton@xyr.is)
+ * @author Keeton Feavel (kfeavel@xyr.is)
  * @brief
  * @version 0.1
  * @date 2023-08-03
@@ -127,7 +127,7 @@ static void CreateEntry(
     };
 }
 
-void Initialize(void)
+void initialize(void)
 {
     // Base and limit are the same for all entries on x86_64
     const union Base base = { .value = 0 };

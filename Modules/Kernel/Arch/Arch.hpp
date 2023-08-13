@@ -14,6 +14,6 @@
 namespace Arch
 {
 
-void Initialize(void);
+void initialize(void);
 
 }

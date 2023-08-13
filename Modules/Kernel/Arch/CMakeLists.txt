@@ -4,8 +4,10 @@ message(STATUS "    [-] Arch")
 
 add_library(Arch OBJECT
     Arch.cpp
-    GDT.cpp
     GDT.asm
+    GDT.cpp
+    Interrupts.cpp
+    Ports.cpp
 )
 
 # TODO: I have yet to decide if / how I want to go about public v. private headers

@@ -1,6 +1,6 @@
 /**
  * @file Arch.cpp
- * @author Keeton Feavel (keeton@xyr.is)
+ * @author Keeton Feavel (kfeavel@xyr.is)
  * @brief
  * @version 0.1
  * @date 2023-08-03
@@ -10,14 +10,17 @@
  */
 
 #include "Arch.hpp"
+#include "Interrupts.hpp"
 #include "GDT.hpp"
 
 namespace Arch
 {
 
-void Initialize(void)
+void initialize(void)
 {
-    GDT::Initialize();
+    Interrupts::criticalRegion([] {
+        GDT::initialize();
+    });
 }
 
 }
