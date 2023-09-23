@@ -16,7 +16,7 @@ RUN /tmp/build-gcc.sh
 RUN /tmp/build-gdb.sh
 
 ARG BUILD_PKGS="cmake ninja nasm mold"
-ARG UTIL_PKGS="git gdb-multiarch"
+ARG UTIL_PKGS="git gdb-multiarch mtools"
 ARG DOCS_PKGS="doxygen graphviz jq"
 
 RUN apk add --no-cache ${BUILD_PKGS}
