@@ -13,7 +13,6 @@ yellow="\033[1;33m"
 no_color="\033[0m"
 
 do_image_stage=1
-do_run_stage=0
 do_run_stage_debug=0
 
 show_help() {
@@ -130,13 +129,30 @@ run_stage() {
         return
     fi
 
+    local ovmf=${OVMF:=Tools/OVMF.bin}
+    local efi="Distribution/efi.img"
+    local boot="Distribution/boot.img"
+
+    if [ ! -e ${ovmf} ]; then
+        echo -e "${light_red}Did not find '${ovmf}'.${no_color}"
+        return
+    fi
+    if [ ! -e ${efi} ]; then
+        echo -e "${light_red}Did not find '${efi}'.${no_color}"
+        return
+    fi
+    if [ ! -e ${boot} ]; then
+        echo -e "${light_red}Did not find '${boot}'.${no_color}"
+        return
+    fi
+
     # shellcheck disable=SC2054
     local arguments=(
-        -bios Tools/OVMF.bin
+        -bios ${ovmf}
         -device ide-cd,bus=ide.0,drive=efi,bootindex=0
-        -drive if=none,media=cdrom,id=efi,file=Distribution/efi.img
+        -drive if=none,media=cdrom,id=efi,file=${efi}
         -device ide-cd,bus=ide.1,drive=boot,bootindex=1
-        -drive if=none,media=cdrom,id=boot,file=Distribution/boot.img
+        -drive if=none,media=cdrom,id=boot,file=${boot}
         -m 4G
         -rtc clock=host
         -serial stdio
@@ -169,14 +185,16 @@ while :; do
             exit
             ;;
         -d|--debug)
-            do_run_stage=1
             do_run_stage_debug=1
+            run_stage
+            exit
             ;;
         -k|--kernel-only)
             do_image_stage=0
             ;;
         -r|--run)
-            do_run_stage=1
+            run_stage
+            exit
             ;;
         --)
             # End of all options.
@@ -199,7 +217,4 @@ done
 build_stage
 if [ $do_image_stage = 1 ]; then
     image_stage
-fi
-if [ $do_run_stage = 1 ]; then
-    run_stage
 fi
