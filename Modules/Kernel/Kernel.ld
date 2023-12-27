@@ -1,12 +1,13 @@
 /* Taken from the Limine barebones repository */
 /* https://github.com/limine-bootloader/ */
 OUTPUT_FORMAT(elf64-x86-64)
-ENTRY(loader_main)
+ENTRY(LoaderEntry)
 
 /* Define the program headers we want so the bootloader gives us the right */
 /* MMU permissions */
 PHDRS
 {
+    null    PT_NULL    FLAGS(0) ;                   /* Null segment */
     text    PT_LOAD    FLAGS((1 << 0) | (1 << 2)) ; /* Execute + Read */
     rodata  PT_LOAD    FLAGS((1 << 2)) ;            /* Read only */
     data    PT_LOAD    FLAGS((1 << 1) | (1 << 2)) ; /* Write + Read */

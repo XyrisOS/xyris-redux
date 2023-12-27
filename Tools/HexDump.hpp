@@ -1,0 +1,65 @@
+#include <iostream>
+#include <iomanip>
+
+// https://codereview.stackexchange.com/a/165162
+std::ostream& hexDump(std::ostream &os, const void *buffer,
+                      std::size_t bufsize, bool showPrintableChars = true)
+{
+    if (buffer == nullptr)
+    {
+        return os;
+    }
+    auto oldFormat = os.flags();
+    auto oldFillChar = os.fill();
+    constexpr std::size_t maxline{8};
+    // create a place to store text version of string
+    char renderString[maxline + 1];
+    char *rsptr{renderString};
+    // convenience cast
+    const unsigned char *buf{reinterpret_cast<const unsigned char *>(buffer)};
+
+    for (std::size_t linecount = maxline; bufsize; --bufsize, ++buf)
+    {
+        os << std::setw(2) << std::setfill('0') << std::hex
+           << static_cast<unsigned>(*buf) << ' ';
+        *rsptr++ = std::isprint(*buf) ? *buf : '.';
+        if (--linecount == 0)
+        {
+            *rsptr++ = '\0'; // terminate string
+            if (showPrintableChars)
+            {
+                os << " | " << renderString;
+            }
+            os << '\n';
+            rsptr = renderString;
+            linecount = std::min(maxline, bufsize);
+        }
+    }
+    // emit newline if we haven't already
+    if (rsptr != renderString)
+    {
+        if (showPrintableChars)
+        {
+            for (*rsptr++ = '\0'; rsptr != &renderString[maxline + 1]; ++rsptr)
+            {
+                os << "   ";
+            }
+            os << " | " << renderString;
+        }
+        os << '\n';
+    }
+
+    os.fill(oldFillChar);
+    os.flags(oldFormat);
+    return os;
+}
+
+struct HexDump {
+    const void *buffer;
+    std::size_t bufsize;
+    HexDump(const void *buf, std::size_t bufsz) : buffer{buf}, bufsize{bufsz} {}
+
+    friend std::ostream &operator<<(std::ostream &out, const HexDump &hd) {
+        return hexDump(out, hd.buffer, hd.bufsize, true);
+    }
+};

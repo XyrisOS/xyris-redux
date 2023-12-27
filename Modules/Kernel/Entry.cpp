@@ -1,6 +1,6 @@
 /**
  * @file Entry.cpp
- * @author Keeton Feavel (keeton@xyr.is)
+ * @author Keeton Feavel (kfeavel@xyr.is)
  * @brief Kernel entry point
  * @version 0.1
  * @date 2023-07-31
@@ -10,16 +10,18 @@
  */
 
 #include <Entry.hpp>
+#include <Arch.hpp>
 
-static void hcf(void);
+namespace Kernel
+{
 
-static void hcf(void) {
-    asm ("cli");
-    for (;;) {
-        asm ("hlt");
-    }
+void Entry(void) {
+    Arch::Initialize();
+    Loader::ShowProgress();
+
+    // Loop on tasks
+
+    Loader::HaltAndCatchFire();
 }
 
-void kernel_main(void) {
-    hcf();
 }
