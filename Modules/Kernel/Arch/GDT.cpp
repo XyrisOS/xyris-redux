@@ -50,7 +50,7 @@ static void CreateEntry(
         .accessed = 0,
         .rw = 1,
         .dc = 0,
-        .executable = (executable ? 1 : 0),
+        .executable = (unsigned int)(executable ? 1 : 0),
         .system = 1,
         .privilege = privilege,
         .present = 1,

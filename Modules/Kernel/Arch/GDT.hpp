@@ -17,13 +17,13 @@ namespace GDT
 
 // Types
 struct __attribute__((packed)) LimitSections {
-    int low     : 16;
-    int high    : 4;
+    unsigned int low     : 16;
+    unsigned int high    : 4;
 };
 
 struct __attribute__((packed)) BaseSections {
-    int low     : 24;
-    int high    : 8;
+    unsigned int low     : 24;
+    unsigned int high    : 8;
 };
 
 union Limit {
@@ -38,26 +38,26 @@ union Base {
 
 struct __attribute__((packed)) Entry {
     // Limit
-    int limitLow        : 16;
+    unsigned int limitLow        : 16;
     // Base
-    int baseLow         : 24;
+    unsigned int baseLow         : 24;
     // Access byte
-    int accessed        : 1;    // Accessed indicator (default to 0)
-    int rw              : 1;    // Readable (code segment) / writeable bit (data segment)
-    int dc              : 1;    // Conforming (code segment) / direction (data segment)
-    int executable      : 1;    // Code (1) or data (0)
-    int system          : 1;    // Task segment (0) or code/data segment (1)
-    int privilege       : 2;    // Privilege level (rings 0-3)
-    int present         : 1;    // Indicates entry is available (default to 1)
+    unsigned int accessed        : 1;    // Accessed indicator (default to 0)
+    unsigned int rw              : 1;    // Readable (code segment) / writeable bit (data segment)
+    unsigned int dc              : 1;    // Conforming (code segment) / direction (data segment)
+    unsigned int executable      : 1;    // Code (1) or data (0)
+    unsigned int system          : 1;    // Task segment (0) or code/data segment (1)
+    unsigned int privilege       : 2;    // Privilege level (rings 0-3)
+    unsigned int present         : 1;    // Indicates entry is available (default to 1)
     // Limit
-    int limitHigh       : 4;    // Ignored
+    unsigned int limitHigh       : 4;    // Ignored
     // Flags
-    int reserved        : 1;    // Reserved (default to 0)
-    int longMode        : 1;    // Indicates a long mode (64-bit) code segment if set
-    int size            : 1;    // Indicates a 32-bit (1) or 16-bit (0) protected mode segment
-    int granulatity     : 1;    // Indicates page granularity if set (otherwise byte granularity)
+    unsigned int reserved        : 1;    // Reserved (default to 0)
+    unsigned int longMode        : 1;    // Indicates a long mode (64-bit) code segment if set
+    unsigned int size            : 1;    // Indicates a 32-bit (1) or 16-bit (0) protected mode segment
+    unsigned int granulatity     : 1;    // Indicates page granularity if set (otherwise byte granularity)
     // Base
-    int baseHigh        : 8;
+    unsigned int baseHigh        : 8;
 };
 
 struct __attribute__((packed)) GDT {
