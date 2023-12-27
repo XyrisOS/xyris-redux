@@ -14,12 +14,12 @@
 namespace Interrupts
 {
 
-void enable()
+void Enable()
 {
     asm volatile("sti");
 }
 
-void disable()
+void Disable()
 {
     asm volatile("cli");
 }
