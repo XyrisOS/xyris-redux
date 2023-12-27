@@ -56,8 +56,8 @@ static void CreateEntry(
         .present = 1,
         .limitHigh = limit.section.high,
         .reserved = 0,
-        .longMode = 0,
-        .size = 1,
+        .longMode = 1,
+        .size = 0,
         .granulatity = 1,
         .baseHigh = base.section.high,
     };
@@ -67,7 +67,7 @@ void Initialize(void)
 {
     // Base and limit are the same for all entries on x86_64
     const union Base base = { .value = 0 };
-    const union Limit limit = { .value = 0x000FFFFF };
+    const union Limit limit = { .value = 0 };
 
     CreateEntry(gdt.kernelCode(), base, limit, true, 0);
     CreateEntry(gdt.kernelData(), base, limit, false, 0);
