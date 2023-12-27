@@ -18,7 +18,7 @@ namespace Arch
 
 void Initialize(void)
 {
-    Interrupts::criticalRegion([] {
+    Interrupts::CriticalRegion([] {
         GDT::Initialize();
     });
 }
