@@ -23,6 +23,8 @@ if (MOLD_BIN_PATH)
 endif()
 
 set(CMAKE_ASM_NASM_OBJECT_FORMAT elf64)
+# Enable debug symbols for nasm source files
+set(CMAKE_ASM_NASM_FLAGS_DEBUG "-g -Fdwarf")
 
 # Compiler is freestanding and does not have crt0.o or libc, so the test will fail.
 set(CMAKE_C_COMPILER_WORKS 1)

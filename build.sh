@@ -49,7 +49,8 @@ build_stage() {
         -G Ninja \
         -B "${DIR_BUILD}" "${PROJECT_DIR}" \
         -DCMAKE_INSTALL_PREFIX="${DIR_INSTALL}" \
-        -DCMAKE_TOOLCHAIN_FILE="${DIR_TOOLCHAINS}/amd64-buildroot-generic.cmake"
+        -DCMAKE_TOOLCHAIN_FILE="${DIR_TOOLCHAINS}/amd64-buildroot-generic.cmake" \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
     cmake --build "${DIR_BUILD}" -j "$(nproc)"
     cmake --install "${DIR_BUILD}"
 }
