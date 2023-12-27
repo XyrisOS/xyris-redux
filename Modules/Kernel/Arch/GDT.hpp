@@ -16,26 +16,27 @@ namespace GDT
 {
 
 // Types
+struct __attribute__((packed)) LimitSections {
+    int low     : 16;
+    int high    : 4;
+};
+
+struct __attribute__((packed)) BaseSections {
+    int low     : 24;
+    int high    : 8;
+};
 
 union Limit {
-    struct [[gnu::packed]] LimitSections
-    {
-        int low     : 16;
-        int high    : 4;
-    } section;
+    LimitSections section;
     uint32_t value;
 };
 
 union Base {
-    struct [[gnu::packed]] BaseSections
-    {
-        int low     : 24;
-        int high    : 8;
-    } section;
+    BaseSections section;
     uint32_t value;
 };
 
-struct [[gnu::packed]] Entry {
+struct __attribute__((packed)) Entry {
     // Limit
     int limitLow        : 16;
     // Base
@@ -59,7 +60,7 @@ struct [[gnu::packed]] Entry {
     int baseHigh        : 8;
 };
 
-struct [[gnu::packed]] GDT {
+struct __attribute__((packed)) GDT {
     Entry& kernelNull() { return entries[0]; }
     Entry& kernelCode() { return entries[1]; }
     Entry& kernelData() { return entries[2]; }
@@ -84,7 +85,7 @@ static_assert(sizeof(Base) == 4, "Base size assertion failure");
 static_assert(sizeof(Entry) == 8, "Entry size assertion failure");
 static_assert(sizeof(GDT) == sizeof(Entry) * 6, "GDT size assertion failure");
 
-struct [[gnu::packed]] GDTR {
+struct __attribute__((packed)) GDTR {
     uint16_t size;
     void* addr;
 };

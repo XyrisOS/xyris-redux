@@ -5,4 +5,6 @@ add_executable(VerifyGDT
     main.cpp
 )
 
-target_include_directories(VerifyGDT PRIVATE ${PROJECT_SOURCE_DIR}/Modules/Kernel)
+target_include_directories(VerifyGDT PRIVATE ${MODULES_KERNEL_DIR})
+
+install(TARGETS VerifyGDT DESTINATION ${CMAKE_INSTALL_PREFIX})

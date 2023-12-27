@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 PROJECT_DIR=$(dirname "$(readlink -f "$0")")
-DIR_MODULE_TOOLS="${PROJECT_DIR}/Modules/Tools"
+DIR_MODULES="${PROJECT_DIR}/Modules"
+DIR_MODULE_TOOLS="${DIR_MODULES}/Tools"
 DIR_TOOLS="${PROJECT_DIR}/Tools"
 DIR_BUILD="${PROJECT_DIR}/Build"
 DIR_INSTALL="${PROJECT_DIR}/Distribution"
@@ -38,7 +39,6 @@ build_stage_check_requirements() {
 
 build_stage() {
     build_stage_check_requirements
-    echo -e "### ${light_blue}Building${no_color}"
     if [ ! -e "${DIR_BUILD}" ]; then
         mkdir "${DIR_BUILD}"
     fi
@@ -46,14 +46,28 @@ build_stage() {
         mkdir "${DIR_INSTALL}"
     fi
 
+    # System tools
+    echo -e "### ${light_blue}Building Tools${no_color}"
     cmake \
         -G Ninja \
-        -B "${DIR_BUILD}" "${PROJECT_DIR}" \
-        -DCMAKE_INSTALL_PREFIX="${DIR_INSTALL}" \
+        -B "${DIR_BUILD}/Tools" "${DIR_TOOLS}" \
+        -DCMAKE_MODULE_PATH="${DIR_CMAKE}/Modules" \
+        -DCMAKE_INSTALL_PREFIX="${DIR_INSTALL}/Tools" \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    cmake --build "${DIR_BUILD}/Tools" -j "$(nproc)"
+    cmake --install "${DIR_BUILD}/Tools"
+
+    # Kernel & Modules
+    echo -e "### ${light_blue}Building Kernel & Modules${no_color}"
+    cmake \
+        -G Ninja \
+        -B "${DIR_BUILD}/Modules" "${DIR_MODULES}" \
+        -DCMAKE_MODULE_PATH="${DIR_CMAKE}/Modules" \
+        -DCMAKE_INSTALL_PREFIX="${DIR_INSTALL}/Modules" \
         -DCMAKE_TOOLCHAIN_FILE="${DIR_TOOLCHAINS}/amd64-buildroot-generic.cmake" \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
-    cmake --build "${DIR_BUILD}" -j "$(nproc)"
-    cmake --install "${DIR_BUILD}"
+    cmake --build "${DIR_BUILD}/Modules" -j "$(nproc)"
+    cmake --install "${DIR_BUILD}/Modules"
 }
 
 image_stage_check_requirements() {
@@ -73,8 +87,8 @@ image_stage() {
         exit
     fi
 
-    local kernel_bin="${DIR_INSTALL}/Kernel"
-    local limine_cfg="${DIR_INSTALL}/limine.cfg"
+    local kernel_bin="${DIR_INSTALL}/Modules/Kernel"
+    local limine_cfg="${DIR_INSTALL}/Modules/limine.cfg"
     local limime_efi="${DIR_MODULE_TOOLS}/limine/BOOTX64.EFI"
     if [ ! -e "${limime_efi}" ]; then
         # TODO: Add submodule warning / error message function
@@ -97,7 +111,7 @@ image_stage() {
     # We have no need for all that space, so for now we break convention.
     # 53 cylinders ~= 32 Mb
 
-    local image_efi="${DIR_INSTALL}/efi.img"
+    local image_efi="${DIR_INSTALL}/Modules/efi.img"
     if [ -e "${image_efi}" ]; then
         echo -e "${yellow}Removing old '${image_efi}'...${no_color}"
         rm "${image_efi:?}"
@@ -113,7 +127,7 @@ image_stage() {
 
     # ------- Kernel -------
 
-    local image_boot="${DIR_INSTALL}/boot.img"
+    local image_boot="${DIR_INSTALL}/Modules/boot.img"
     if [ -e "${image_boot}" ]; then
         echo -e "${yellow}Removing old '${image_boot}'...${no_color}"
         rm "${image_boot:?}"
@@ -132,8 +146,8 @@ run_stage() {
     fi
 
     local ovmf=${OVMF:=Tools/OVMF.bin}
-    local efi="Distribution/efi.img"
-    local boot="Distribution/boot.img"
+    local efi="Distribution/Modules/efi.img"
+    local boot="Distribution/Modules/boot.img"
 
     if [ ! -e ${ovmf} ]; then
         echo -e "${light_red}Did not find '${ovmf}'.${no_color}"

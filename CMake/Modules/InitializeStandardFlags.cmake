@@ -10,3 +10,13 @@ add_compile_options(
     "$<$<COMPILE_LANGUAGE:CXX>:${CXX_FLAGS}>"
     "$<$<COMPILE_LANGUAGE:C>:${C_FLAGS}>"
 )
+
+# Require certain language versions across tools and kernel
+set(CMAKE_C_STANDARD 23)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_COLOR_MAKEFILE ON)
+set(CMAKE_COLOR_DIAGNOSTICS ON)
+
+set(CMAKE_STATIC_LIBRARY_SUFFIX "")
+set(CMAKE_STATIC_LIBRARY_PREFIX "")
