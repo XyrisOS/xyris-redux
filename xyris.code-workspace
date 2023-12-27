@@ -4,55 +4,6 @@
 			"path": "."
 		}
     ],
-    "tasks": {
-        "version": "2.0.0",
-        "tasks": [
-            {
-                "type": "shell",
-                "label": "Build",
-                "command": "./build.sh",
-                "group": {
-                    "kind": "build",
-                    "isDefault": true
-                },
-                "problemMatcher": [
-                    "$gcc"
-                ]
-            },
-            {
-                "type": "shell",
-                "label": "Build (Image)",
-                "command": "./build.sh",
-                "group": {
-                    "kind": "build"
-                },
-                "args": [
-                    "--image"
-                ],
-                "problemMatcher": [
-                    "$gcc"
-                ]
-            },
-            {
-                "type": "shell",
-                "label": "Clean",
-                "command": "./build.sh",
-                "args": [
-                    "--clean"
-                ],
-                "problemMatcher": []
-            },
-            {
-                "type": "shell",
-                "label": "Run (No Debug)",
-                "command": "./build.sh",
-                "args": [
-                    "--run"
-                ],
-                "problemMatcher": []
-            }
-        ]
-    },
     "settings": {
         // CMake
         "cmake.buildDirectory": "${workspaceFolder}/Build",
