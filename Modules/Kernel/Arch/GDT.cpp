@@ -67,7 +67,7 @@ struct [[gnu::packed]] GDT {
     Entry& userCode() { return entries[4]; }
     Entry& userData() { return entries[5]; }
 
-    void* address() { return &entries; }
+    void* address() { return entries; }
 
     Entry entries[6] = {
         Entry(),    // Kernel null
@@ -97,7 +97,7 @@ static GDTR gdtr = GDTR();
 // Functions
 
 // Implemented by GDT.asm
-extern "C" void GDT_Flush(GDTR* pGDTR);
+extern "C" void FlushGDT(GDTR* pGDTR);
 
 static void CommitAndFlush(void)
 {
@@ -107,7 +107,8 @@ static void CommitAndFlush(void)
         .addr = gdt.address(),
     };
 
-    GDT_Flush(&gdtr);
+    // TODO: The `lgdt` instruction is triple fauling. Figure out why.
+    FlushGDT(&gdtr);
 }
 
 static void CreateEntry(
