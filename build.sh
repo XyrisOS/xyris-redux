@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 PROJECT_DIR=$(dirname "$(readlink -f "$0")")
+DIR_MODULE_TOOLS="${PROJECT_DIR}/Modules/Tools"
 DIR_TOOLS="${PROJECT_DIR}/Tools"
 DIR_BUILD="${PROJECT_DIR}/Build"
 DIR_INSTALL="${PROJECT_DIR}/Distribution"
@@ -74,7 +75,7 @@ image_stage() {
 
     local kernel_bin="${DIR_INSTALL}/Kernel"
     local limine_cfg="${DIR_INSTALL}/limine.cfg"
-    local limime_efi="${DIR_TOOLS}/limine/BOOTX64.EFI"
+    local limime_efi="${DIR_MODULE_TOOLS}/limine/BOOTX64.EFI"
     if [ ! -e "${limime_efi}" ]; then
         # TODO: Add submodule warning / error message function
         echo -e "${light_red}'${limime_efi}' does not exist! (Update your submodules!)${no_color}"
