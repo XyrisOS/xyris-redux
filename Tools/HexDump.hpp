@@ -2,7 +2,7 @@
 #include <iomanip>
 
 // https://codereview.stackexchange.com/a/165162
-std::ostream &HexDump(std::ostream &os, const void *buffer,
+std::ostream& hexDump(std::ostream &os, const void *buffer,
                       std::size_t bufsize, bool showPrintableChars = true)
 {
     if (buffer == nullptr)
@@ -53,3 +53,13 @@ std::ostream &HexDump(std::ostream &os, const void *buffer,
     os.flags(oldFormat);
     return os;
 }
+
+struct HexDump {
+    const void *buffer;
+    std::size_t bufsize;
+    HexDump(const void *buf, std::size_t bufsz) : buffer{buf}, bufsize{bufsz} {}
+
+    friend std::ostream &operator<<(std::ostream &out, const HexDump &hd) {
+        return hexDump(out, hd.buffer, hd.bufsize, true);
+    }
+};

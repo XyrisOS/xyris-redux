@@ -21,8 +21,7 @@ namespace GDT {
         std::cout << "Validating GDT [" << pGDT << "]" << std::endl;
         for (size_t i = 0; i != 6; i++) {
             Entry& entry = pGDT->entries[i];
-            std::cout << "  [" << i << "] ";
-            HexDump(std::cout, &entry, sizeof(Entry), false);
+            std::cout << "  [" << i << "] " << HexDump(&entry, sizeof(Entry));
         }
     }
 }
