@@ -16,10 +16,10 @@
 namespace Arch
 {
 
-void initialize(void)
+void Initialize(void)
 {
     Interrupts::criticalRegion([] {
-        GDT::initialize();
+        GDT::Initialize();
     });
 }
 

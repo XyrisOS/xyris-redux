@@ -163,11 +163,10 @@ run_stage() {
         echo
         echo -e "${light_blue}Attach to qemu with GDB${no_color}"
         echo
-        echo -e "${yellow}set arch x86-64:intel${no_color}"
+        echo -e "${yellow}set arch i386:x86-64:intel${no_color}"
         echo -e "${yellow}target remote localhost:1234${no_color}"
         echo
-        arguments+=(-S)
-        arguments+=(-s)
+        arguments+=(-s -S)
     fi
 
     echo -e "${light_blue}Starting qemu...${no_color}"

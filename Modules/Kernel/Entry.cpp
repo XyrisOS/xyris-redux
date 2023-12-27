@@ -16,7 +16,7 @@ namespace Kernel
 {
 
 void Entry(void) {
-    Arch::initialize();
+    Arch::Initialize();
     Loader::ShowProgress();
 
     // Loop on tasks

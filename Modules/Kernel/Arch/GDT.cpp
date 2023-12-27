@@ -60,42 +60,51 @@ struct [[gnu::packed]] Entry {
 };
 
 struct [[gnu::packed]] GDT {
-    Entry null;
-    Entry kernelCode;
-    Entry kernelData;
-    Entry userCode;
-    Entry userData;
+    Entry& kernelNull() { return entries[0]; }
+    Entry& kernelCode() { return entries[1]; }
+    Entry& kernelData() { return entries[2]; }
+    Entry& userNull() { return entries[3]; }
+    Entry& userCode() { return entries[4]; }
+    Entry& userData() { return entries[5]; }
 
-    GDT()
-        : null(Entry())
-        , kernelCode(Entry())
-        , kernelData(Entry())
-        , userCode(Entry())
-        , userData(Entry())
-    { /* Stubbed */}
+    void* address() { return &entries; }
+
+    Entry entries[6] = {
+        Entry(),    // Kernel null
+        Entry(),    // Kernel code
+        Entry(),    // Kernel data
+        Entry(),    // User null
+        Entry(),    // User code
+        Entry()     // User data
+    };
 };
+
+// Cannot `static_assert` `Limit` because of irrational byte size
+static_assert(sizeof(Base) == 4, "Base size assertion failure");
+static_assert(sizeof(Entry) == 8, "Entry size assertion failure");
+static_assert(sizeof(GDT) == sizeof(Entry) * 6, "GDT size assertion failure");
 
 struct [[gnu::packed]] GDTR {
     uint16_t size;
-    struct GDT* addr;
+    void* addr;
 };
 
 // Variables
 
-static struct GDT gdt;
-static struct GDTR gdtr;
+static GDT gdt = GDT();
+static GDTR gdtr = GDTR();
 
 // Functions
 
 // Implemented by GDT.asm
-extern "C" void GDT_Flush(struct GDTR* pGDTR);
+extern "C" void GDT_Flush(GDTR* pGDTR);
 
 static void CommitAndFlush(void)
 {
     // Update GDT register and flush
     gdtr = {
         .size = sizeof(gdt) - 1,
-        .addr = &gdt,
+        .addr = gdt.address(),
     };
 
     GDT_Flush(&gdtr);
@@ -127,16 +136,16 @@ static void CreateEntry(
     };
 }
 
-void initialize(void)
+void Initialize(void)
 {
     // Base and limit are the same for all entries on x86_64
     const union Base base = { .value = 0 };
     const union Limit limit = { .value = 0x000FFFFF };
 
-    CreateEntry(gdt.kernelCode, base, limit, true, 0);
-    CreateEntry(gdt.kernelData, base, limit, false, 0);
-    CreateEntry(gdt.userCode, base, limit, true, 3);
-    CreateEntry(gdt.userData, base, limit, false, 3);
+    CreateEntry(gdt.kernelCode(), base, limit, true, 0);
+    CreateEntry(gdt.kernelData(), base, limit, false, 0);
+    CreateEntry(gdt.userCode(), base, limit, true, 3);
+    CreateEntry(gdt.userData(), base, limit, false, 3);
 
     CommitAndFlush();
 }

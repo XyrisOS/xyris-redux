@@ -13,14 +13,19 @@ GDT_Flush:
     lgdt [rdi]
     ; Kernel data segment (index 2)
     mov ax, (2 * GDT_ENTRY_SIZE)
-    mov ss, ax
     mov ds, ax
     mov es, ax
-    mov rax, qword .blj ; Yahoo
-    ; Kernel code segment (index 1)
-    push qword (1 * GDT_ENTRY_SIZE)
-    push rax
-    o64 retf
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
 
-.blj:
-    ret
+    ; Get return address and prepare for long jump
+    pop rdi
+
+    ; Kernel code segment (index 1)
+    mov rax, (1 * GDT_ENTRY_SIZE)
+    push rax
+    push rdi
+
+    ; Do a sick backwards long jump back to code
+    retfq

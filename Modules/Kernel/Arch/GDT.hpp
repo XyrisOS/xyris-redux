@@ -15,6 +15,6 @@
 namespace GDT
 {
 
-void initialize(void);
+void Initialize(void);
 
 }
