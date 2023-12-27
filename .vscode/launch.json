@@ -8,7 +8,7 @@
             "name": "Attach to QEMU",
             "type": "gdb",
             "request": "attach",
-            "executable": "${workspaceRoot}/Distribution/Kernel",
+            "executable": "${workspaceRoot}/Distribution/Modules/Kernel",
             "target": "localhost:1234",
             "remote": true,
             "gdbpath": "/opt/cross/bin/x86_64-elf-gdb",

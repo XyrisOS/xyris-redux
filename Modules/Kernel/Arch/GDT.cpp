@@ -33,7 +33,6 @@ static void CommitAndFlush(void)
         .addr = gdt.address(),
     };
 
-    // TODO: The `lgdt` instruction is triple fauling. Figure out why.
     FlushGDT(&gdtr);
 }
 
