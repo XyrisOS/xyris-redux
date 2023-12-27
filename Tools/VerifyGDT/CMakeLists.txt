@@ -3,6 +3,7 @@ message(STATUS "  [-] VerifyGDT")
 
 add_executable(VerifyGDT
     main.cpp
+    ${MODULES_KERNEL_DIR}/Arch/GDT.cpp
 )
 
 target_include_directories(VerifyGDT PRIVATE ${MODULES_KERNEL_DIR})
