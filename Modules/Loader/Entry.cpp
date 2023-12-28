@@ -34,7 +34,6 @@ void HaltAndCatchFire(void) {
     }
 }
 
-
 void ShowProgress(void)
 {
     // Fetch the first framebuffer.
@@ -48,7 +47,6 @@ void ShowProgress(void)
 }
 
 }
-
 
 extern "C" void LoaderEntry(void) {
     // Ensure we got a framebuffer.

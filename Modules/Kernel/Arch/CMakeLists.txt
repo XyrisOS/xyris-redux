@@ -9,6 +9,7 @@ add_library(Arch OBJECT
     IDT.asm
     IDT.cpp
     Interrupts.cpp
+    ISR.asm
     Ports.cpp
 )
 
