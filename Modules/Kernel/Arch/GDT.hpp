@@ -16,6 +16,7 @@ namespace GDT
 {
 
 // Types
+
 struct __attribute__((packed)) LimitSections {
     unsigned int low     : 16;
     unsigned int high    : 4;
@@ -68,7 +69,7 @@ struct __attribute__((packed)) GDT {
     Entry& userCode() { return entries[4]; }
     Entry& userData() { return entries[5]; }
 
-    void* address() { return entries; }
+    uintptr_t address() { return reinterpret_cast<uintptr_t>(&entries); }
 
     Entry entries[6] = {
         Entry(),    // Kernel null
@@ -80,15 +81,16 @@ struct __attribute__((packed)) GDT {
     };
 };
 
+struct __attribute__((packed)) GDTR {
+    uint16_t size;
+    uintptr_t addr;
+};
+
 // Cannot `static_assert` `Limit` because of irrational byte size
 static_assert(sizeof(Base) == 4, "Base size assertion failure");
 static_assert(sizeof(Entry) == 8, "Entry size assertion failure");
-static_assert(sizeof(GDT) == sizeof(Entry) * 6, "GDT size assertion failure");
-
-struct __attribute__((packed)) GDTR {
-    uint16_t size;
-    void* addr;
-};
+static_assert(sizeof(GDT) == (sizeof(Entry) * 6), "GDT size assertion failure");
+static_assert(sizeof(GDTR) == 10, "GDTR size assertion failure");
 
 // Functions
 

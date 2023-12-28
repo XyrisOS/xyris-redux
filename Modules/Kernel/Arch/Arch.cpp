@@ -12,6 +12,7 @@
 #include "Arch.hpp"
 #include "Interrupts.hpp"
 #include "GDT.hpp"
+#include "IDT.hpp"
 
 namespace Arch
 {
@@ -20,6 +21,7 @@ void Initialize(void)
 {
     Interrupts::CriticalRegion([] {
         GDT::Initialize();
+        IDT::Initialize();
     });
 }
 
