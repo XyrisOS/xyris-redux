@@ -5,6 +5,8 @@ add_library(Arch OBJECT
     Arch.cpp
     GDT.asm
     GDT.cpp
+    IDT.asm
+    IDT.cpp
     Interrupts.cpp
     Ports.cpp
 )
