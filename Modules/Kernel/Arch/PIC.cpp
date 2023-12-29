@@ -86,4 +86,20 @@ void Finalize(void)
     IO::WriteByte(PIC1_DATA, FINALIZE);
 }
 
+void EndOfInterrupt(uint64_t id)
+{
+    constexpr uint8_t eoi = 0x20;
+
+    // Interrupts and exceptions are treated the same and as such we need to
+    // account for all the exceptions (32 of them) and then offset by the
+    // interrupts that require acknowledgement on the secondary PIC (which is
+    // 8 since the 8259 handles 8 interrupts per controller), which results
+    // in a value of 0x28 (40 decimal).
+    if (id >= 0x28) {
+        IO::WriteByte(PIC2_COMMAND, eoi);
+    }
+
+    IO::WriteByte(PIC1_COMMAND, eoi);
+}
+
 }

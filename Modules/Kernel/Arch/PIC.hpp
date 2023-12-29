@@ -20,4 +20,6 @@ namespace PIC
 void Initialize(void);
 void Finalize(void);
 
+void EndOfInterrupt(uint64_t id);
+
 }
