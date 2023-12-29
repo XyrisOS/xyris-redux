@@ -17,11 +17,11 @@ namespace Interrupts
 void Enable(void);
 void Disable(void);
 
-template<typename Function>
-void CriticalRegion(Function criticalWork)
+template<typename T>
+void CriticalRegion(T work)
 {
     Disable();
-    criticalWork();
+    work();
     Enable();
 }
 

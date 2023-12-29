@@ -117,6 +117,8 @@ InterruptHandlerProxy:
 ; Generates a table of all interrupt (and exception) symbols for
 ; referencing by the C/C++ side in order to reduce code duplication.
 ;
+; Interrupts 0..32 (inclusive) are CPU exceptions.
+;
 global InterruptTable
 InterruptTable:
 %assign i 0

@@ -10,10 +10,9 @@
  */
 #include "Ports.hpp"
 
-namespace Ports
+namespace IO
 {
-
-    uint8_t readByte(uint16_t port)
+    uint8_t ReadByte(uint16_t port)
     {
         uint8_t result;
         asm volatile("inb %1, %0"
@@ -22,14 +21,14 @@ namespace Ports
         return result;
     }
 
-    void writeByte(uint16_t port, uint8_t data)
+    void WriteByte(uint16_t port, uint8_t data)
     {
         asm volatile("outb %0, %1"
                      :
                      : "a"(data), "Nd"(port));
     }
 
-    uint16_t readWord(uint16_t port)
+    uint16_t ReadWord(uint16_t port)
     {
         uint16_t result;
         asm volatile("inw %1, %0"
@@ -38,14 +37,14 @@ namespace Ports
         return result;
     }
 
-    void writeWord(uint16_t port, uint16_t data)
+    void WriteWord(uint16_t port, uint16_t data)
     {
         asm volatile("outw %0, %1"
                      :
                      : "a"(data), "Nd"(port));
     }
 
-    uint32_t readLong(uint16_t port)
+    uint32_t ReadLong(uint16_t port)
     {
         uint32_t result;
         asm volatile("inl %1, %0"
@@ -54,11 +53,10 @@ namespace Ports
         return result;
     }
 
-    void writeLong(uint16_t port, uint32_t data)
+    void WriteLong(uint16_t port, uint32_t data)
     {
         asm volatile("outl %0, %1"
                      :
                      : "a"(data), "Nd"(port));
     }
-
 }
