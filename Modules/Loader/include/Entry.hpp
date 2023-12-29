@@ -10,6 +10,7 @@
  */
 
 #pragma once
+#include <stdint.h>
 
 namespace Kernel
 {
@@ -27,6 +28,6 @@ void Entry(void);
 namespace Loader
 {
 
-void ShowProgress(void);
+void ShowProgress(uint32_t color);
 
 }

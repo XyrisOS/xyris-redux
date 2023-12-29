@@ -11,15 +11,20 @@
 
 #include <Entry.hpp>
 #include <Arch.hpp>
+#include <stdint.h>
 
 namespace Kernel
 {
 
 void Entry(void) {
     Arch::Initialize();
-    Loader::ShowProgress();
 
     // Loop on tasks
+    while (true) {
+        for (uint32_t c = 0x000000; c <= 0xffffff; c++) {
+            Loader::ShowProgress(c);
+        }
+    }
 
     Arch::HaltAndCatchFire();
 }
