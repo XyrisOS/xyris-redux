@@ -24,7 +24,7 @@ namespace Loader
 {
 
 [[noreturn]]
-void HaltAndCatchFire()
+static void HaltAndCatchFire()
 {
     asm volatile("cli");
     while (true) {

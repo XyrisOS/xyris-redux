@@ -50,11 +50,12 @@ struct __attribute__((packed)) Entry {
     unsigned int selector        : 16;  // Segment selector
     // Interrupt Stack Table
     unsigned int stackTable      : 3;   // Interrupt stack table offset
-    unsigned int reservedLow     : 5;   // Reserved bytes
+    unsigned int reservedLow     : 4;   // Reserved bytes
     // Flags
     Gate type                    : 4;   // Interrupt descriptor type
     unsigned int zero            : 1;   // Always zero
     unsigned int privilege       : 2;   // Privilege level (rings 0-3)
+    unsigned int present         : 1;   // Indicates if the entry is valid (1) or invalid (0)
     // Offset
     unsigned int offsetMid       : 16;
     unsigned int offsetHigh      : 32;
