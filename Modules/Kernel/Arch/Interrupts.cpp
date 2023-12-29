@@ -10,6 +10,8 @@
  */
 
 #include "Interrupts.hpp"
+#include "Arch.hpp"
+#include "PIC.hpp"
 #include <stdint.h>
 
 namespace Interrupts
@@ -34,7 +36,7 @@ struct InterruptFrame {
     uint64_t rbx;
     uint64_t rax;
     // Pushed by the CPU on interrupt
-    uint64_t isr_number;
+    uint64_t interrupt;
     uint64_t error;
     uint64_t rip;
     uint64_t cs;
@@ -50,7 +52,10 @@ struct InterruptFrame {
 extern "C" void InterruptHandler(InterruptFrame* frame);
 extern "C" void InterruptHandler(InterruptFrame* frame)
 {
-    (void)frame;
+    PIC::EndOfInterrupt(frame->interrupt);
+
+    // TODO: Create way to register handlers and call into them here.
+    //       Make sure to allow for priority vs. lazy handling.
 }
 
 // Functions
