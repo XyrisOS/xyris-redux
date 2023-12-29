@@ -32,15 +32,17 @@ static void HaltAndCatchFire()
     }
 }
 
-void ShowProgress()
+void ShowProgress(uint32_t color)
 {
     // Fetch the first framebuffer.
     const limine_framebuffer* framebuffer = framebufferRequest.response->framebuffers[0];
 
     // Note: we assume the framebuffer model is RGB with 32-bit pixels.
-    for (size_t i = 0; i < 100; i++) {
-        auto* fb_ptr = static_cast<uint32_t*>(framebuffer->address);
-        fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xffffff;
+    auto* fb_ptr = static_cast<uint32_t*>(framebuffer->address);
+    for (size_t x = 0; x < 100; x++) {
+        for (size_t y = 0; y < 100; y++) {
+            fb_ptr[y * (framebuffer->pitch / 4) + x] = color;
+        }
     }
 }
 

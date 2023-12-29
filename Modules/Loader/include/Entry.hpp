@@ -10,6 +10,7 @@
  */
 
 #pragma once
+#include <stdint.h>
 
 namespace Kernel
 {
@@ -33,6 +34,6 @@ namespace Loader
 [[noreturn]]
 void HaltAndCatchFire();
 
-void ShowProgress();
+void ShowProgress(uint32_t color);
 
 }
