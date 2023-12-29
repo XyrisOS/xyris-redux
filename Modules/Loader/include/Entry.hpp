@@ -27,13 +27,6 @@ void Entry(void);
 namespace Loader
 {
 
-/**
- * @brief Early form of panic when no other option is available.
- *
- */
-[[noreturn]]
-void HaltAndCatchFire(void);
-
 void ShowProgress(void);
 
 }

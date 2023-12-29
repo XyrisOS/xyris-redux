@@ -10,12 +10,16 @@
  */
 
 #include "IDT.hpp"
+#include "GDT.hpp"
 #include <stddef.h>
 
 namespace IDT
 {
 
 // Variables
+
+// Defined by ISR.asm
+extern "C" void* InterruptTable[];
 
 static IDT idt = IDT();
 static IDTR idtr = IDTR();
@@ -39,18 +43,20 @@ static void CommitAndFlush(void)
 static void CreateEntry(
     Entry &entry,
     const Offset &offset,
-    const SegmentSelector &selector,
-    const Gate &type,
-    const uint8_t privilege)
+    const Gate &type)
 {
+    constexpr unsigned int kernelCodeSelector = (GDT::GDT::kernelCodeIndex() * sizeof(GDT::Entry));
+    static_assert(kernelCodeSelector, "Invalid GDT kernel code segment value");
+
     entry = {
         .offsetLow = offset.section.low,
-        .selector = selector.value,
+        .selector = kernelCodeSelector,
         .stackTable = 0,
         .reservedLow = 0,
         .type = type,
         .zero = 0,
-        .privilege = privilege,
+        .privilege = 0,
+        .present = 1,
         .offsetMid = offset.section.mid,
         .offsetHigh = offset.section.high,
         .reservedHigh = 0,
@@ -60,8 +66,11 @@ static void CreateEntry(
 void Initialize(void)
 {
     for (size_t i = 0; i < (sizeof(IDT) / sizeof(Entry)); i++) {
+        union Offset offset = { .value = reinterpret_cast<uintptr_t>(InterruptTable[i]) };
 
+        CreateEntry(idt.entries[i], offset, GateInterrupt);
     }
+
     CommitAndFlush();
 }
 

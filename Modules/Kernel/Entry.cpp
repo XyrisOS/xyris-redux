@@ -21,7 +21,7 @@ void Entry(void) {
 
     // Loop on tasks
 
-    Loader::HaltAndCatchFire();
+    Arch::HaltAndCatchFire();
 }
 
 }

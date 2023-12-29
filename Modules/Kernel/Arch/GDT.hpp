@@ -11,6 +11,7 @@
 
 #pragma once
 #include <stdint.h>
+#include <stddef.h>
 
 namespace GDT
 {
@@ -62,12 +63,21 @@ struct __attribute__((packed)) Entry {
 };
 
 struct __attribute__((packed)) GDT {
-    Entry& kernelNull() { return entries[0]; }
-    Entry& kernelCode() { return entries[1]; }
-    Entry& kernelData() { return entries[2]; }
-    Entry& userNull() { return entries[3]; }
-    Entry& userCode() { return entries[4]; }
-    Entry& userData() { return entries[5]; }
+    // Made available for other services like the IDT
+    static constexpr size_t kernelNullIndex() { return 0; }
+    static constexpr size_t kernelCodeIndex() { return 1; }
+    static constexpr size_t kernelDataIndex() { return 2; }
+    static constexpr size_t userNullIndex() { return 3; }
+    static constexpr size_t userCodeIndex() { return 4; }
+    static constexpr size_t userDataIndex() { return 5; }
+
+    // Accessor functions to eliminate potential confusion
+    Entry& kernelNull() { return entries[kernelNullIndex()]; }
+    Entry& kernelCode() { return entries[kernelCodeIndex()]; }
+    Entry& kernelData() { return entries[kernelDataIndex()]; }
+    Entry& userNull() { return entries[userNullIndex()]; }
+    Entry& userCode() { return entries[userCodeIndex()]; }
+    Entry& userData() { return entries[userDataIndex()]; }
 
     uintptr_t address() { return reinterpret_cast<uintptr_t>(&entries); }
 

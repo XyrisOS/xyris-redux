@@ -27,7 +27,7 @@ extern "C" void LoaderEntry(void);
 namespace Loader {
 
 [[noreturn]]
-void HaltAndCatchFire(void) {
+static void HaltAndCatchFire(void) {
     asm volatile ("cli");
     while (true) {
         asm volatile ("hlt");

@@ -25,4 +25,12 @@ void Initialize(void)
     });
 }
 
+[[noreturn]]
+void HaltAndCatchFire(void) {
+    asm volatile ("cli");
+    while (true) {
+        asm volatile ("hlt");
+    }
+}
+
 }

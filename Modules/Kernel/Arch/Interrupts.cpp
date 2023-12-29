@@ -43,11 +43,6 @@ struct InterruptFrame {
     uint64_t ss;
 };
 
-// Variables
-
-// Defined by ISR.asm
-extern void* InterruptTable[];
-
 // Declaration in order to make compiler happy. We don't want to define
 // this in the header though since we also don't want to define the
 // interrupt frame structure there given that only ISR.asm should be
