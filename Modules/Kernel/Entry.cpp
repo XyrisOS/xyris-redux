@@ -11,7 +11,7 @@
 
 #include <Entry.hpp>
 #include <Arch.hpp>
-#include <stdint.h>
+#include <stddef.h>
 
 namespace Kernel
 {
@@ -20,9 +20,10 @@ void Entry(void) {
     Arch::Initialize();
 
     // Loop on tasks
+    const uint32_t colors[] = { 0xFF00FF, 0xFFFF00, 0x00FFFF };
     while (true) {
-        for (uint32_t c = 0x000000; c <= 0xffffff; c++) {
-            Loader::ShowProgress(c);
+        for (size_t i = 0; i < (sizeof(colors) / sizeof(colors[0])); i++) {
+            Loader::ShowProgress(colors[i]);
         }
     }
 
