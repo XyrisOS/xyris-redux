@@ -52,6 +52,11 @@ struct InterruptFrame {
 extern "C" void InterruptHandler(InterruptFrame* frame);
 extern "C" void InterruptHandler(InterruptFrame* frame)
 {
+    // Halt on exceptions for now. Will update this to panic later.
+    if (frame->interrupt <= 32) {
+        Arch::HaltAndCatchFire();
+    }
+
     PIC::EndOfInterrupt(frame->interrupt);
 
     // TODO: Create way to register handlers and call into them here.
