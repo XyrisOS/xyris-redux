@@ -17,10 +17,10 @@ namespace Interrupts
 void Enable();
 void Disable();
 
-template<typename Function> void CriticalRegion(Function criticalWork)
+template<typename T> void CriticalRegion(T work)
 {
     Disable();
-    criticalWork();
+    work();
     Enable();
 }
 
