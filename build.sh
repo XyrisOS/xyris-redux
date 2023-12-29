@@ -171,8 +171,9 @@ run_stage() {
         -drive if=none,media=cdrom,id=boot,file=${boot}
         -m 4G
         -rtc clock=host
-        -serial stdio
+        -serial mon:stdio
         -monitor telnet:127.0.0.1:1234,server,nowait
+        -d int,cpu_reset
     )
 
     if [ $do_run_stage_debug = 1 ]; then
