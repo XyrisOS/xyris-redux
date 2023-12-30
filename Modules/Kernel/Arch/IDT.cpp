@@ -19,7 +19,8 @@ namespace IDT
 // Variables
 
 // Defined by ISR.asm
-extern "C" void* InterruptTable[];
+extern "C" void* InterruptTable[256];
+static_assert((sizeof(InterruptTable) / sizeof(InterruptTable[0])) == (sizeof(IDT) / sizeof(Entry)), "Interrupt table and IDT sizes differ");
 
 static IDT idt = IDT();
 static IDTR idtr = IDTR();
@@ -46,7 +47,6 @@ static void CreateEntry(
     const Gate &type)
 {
     constexpr unsigned int kernelCodeSelector = (GDT::GDT::kernelCodeIndex() * sizeof(GDT::Entry));
-    static_assert(kernelCodeSelector, "Invalid GDT kernel code segment value");
 
     entry = {
         .offsetLow = offset.section.low,
@@ -65,8 +65,11 @@ static void CreateEntry(
 
 void Initialize(void)
 {
-    for (size_t i = 0; i < (sizeof(IDT) / sizeof(Entry)); i++) {
-        union Offset offset = { .value = reinterpret_cast<uintptr_t>(InterruptTable[i]) };
+    for (size_t i = 0; i < (sizeof(InterruptTable) / sizeof(InterruptTable[i])); i++) {
+        // Have the interrupt variable here for debugging atm.
+        // TODO: Simplify by removing variable.
+        void* interrupt = &InterruptTable[i];
+        union Offset offset = { .value = reinterpret_cast<uintptr_t>(interrupt) };
 
         CreateEntry(idt.entries[i], offset, GateInterrupt);
     }
