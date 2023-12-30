@@ -11,11 +11,13 @@
 
 #pragma once
 #include <stdint.h>
+#include <stddef.h>
 
 namespace GDT
 {
 
 // Types
+
 struct __attribute__((packed)) LimitSections {
     unsigned int low     : 16;
     unsigned int high    : 4;
@@ -61,14 +63,23 @@ struct __attribute__((packed)) Entry {
 };
 
 struct __attribute__((packed)) GDT {
-    Entry& kernelNull() { return entries[0]; }
-    Entry& kernelCode() { return entries[1]; }
-    Entry& kernelData() { return entries[2]; }
-    Entry& userNull() { return entries[3]; }
-    Entry& userCode() { return entries[4]; }
-    Entry& userData() { return entries[5]; }
+    // Made available for other services like the IDT
+    static constexpr size_t kernelNullIndex() { return 0; }
+    static constexpr size_t kernelCodeIndex() { return 1; }
+    static constexpr size_t kernelDataIndex() { return 2; }
+    static constexpr size_t userNullIndex() { return 3; }
+    static constexpr size_t userCodeIndex() { return 4; }
+    static constexpr size_t userDataIndex() { return 5; }
 
-    void* address() { return entries; }
+    // Accessor functions to eliminate potential confusion
+    Entry& kernelNull() { return entries[kernelNullIndex()]; }
+    Entry& kernelCode() { return entries[kernelCodeIndex()]; }
+    Entry& kernelData() { return entries[kernelDataIndex()]; }
+    Entry& userNull() { return entries[userNullIndex()]; }
+    Entry& userCode() { return entries[userCodeIndex()]; }
+    Entry& userData() { return entries[userDataIndex()]; }
+
+    uintptr_t address() { return reinterpret_cast<uintptr_t>(&entries); }
 
     Entry entries[6] = {
         Entry(),    // Kernel null
@@ -80,15 +91,16 @@ struct __attribute__((packed)) GDT {
     };
 };
 
+struct __attribute__((packed)) GDTR {
+    uint16_t size;
+    uintptr_t addr;
+};
+
 // Cannot `static_assert` `Limit` because of irrational byte size
 static_assert(sizeof(Base) == 4, "Base size assertion failure");
 static_assert(sizeof(Entry) == 8, "Entry size assertion failure");
-static_assert(sizeof(GDT) == sizeof(Entry) * 6, "GDT size assertion failure");
-
-struct __attribute__((packed)) GDTR {
-    uint16_t size;
-    void* addr;
-};
+static_assert(sizeof(GDT) == (sizeof(Entry) * 6), "GDT size assertion failure");
+static_assert(sizeof(GDTR) == 10, "GDTR size assertion failure");
 
 // Functions
 

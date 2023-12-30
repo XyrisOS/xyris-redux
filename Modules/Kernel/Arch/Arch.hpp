@@ -16,4 +16,11 @@ namespace Arch
 
 void Initialize(void);
 
+/**
+ * @brief Early form of panic when no other option is available.
+ *
+ */
+[[noreturn]]
+void HaltAndCatchFire(void);
+
 }

@@ -19,5 +19,7 @@
         "[markdown]": {
             "files.trimTrailingWhitespace": false
         },
+        "C_Cpp.clang_format_fallbackStyle": "WebKit",
+        "C_Cpp.doxygen.generatedStyle": "/**",
     },
 }
