@@ -103,9 +103,7 @@ InterruptHandlerProxy:
 ;
 %assign i 0
 %rep    256
-    %if i == 8
-        InterruptError i
-    %elif i >= 10 && i <= 14
+    %if (i == 8 || (i >= 10 && i <= 14))
         InterruptError i
     %else
         Interrupt i
@@ -123,9 +121,7 @@ global InterruptTable
 InterruptTable:
 %assign i 0
 %rep    256
-    %if i == 8
-        dq InterruptError%+i
-    %elif i >= 10 && i <= 14
+    %if (i == 8 || (i >= 10 && i <= 14))
         dq InterruptError%+i
     %else
         dq Interrupt%+i
