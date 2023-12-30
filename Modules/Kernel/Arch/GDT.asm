@@ -1,3 +1,4 @@
+section .text
 bits 64
 GDT_ENTRY_SIZE equ 8
 
