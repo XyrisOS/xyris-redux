@@ -58,10 +58,19 @@ void Initialize(void)
 {
     // TODO: There's a lot of magic going on here that I don't fully understand.
 
+    // Save masks for restoration after PIC initialization
+    uint8_t mask1 = IO::ReadByte(PIC1_DATA);
+    uint8_t mask2 = IO::ReadByte(PIC2_DATA);
+
     // Start initialization of PIC
     // (in cascade mode so that slave PICs are also initialized)
     IO::WriteByte(PIC1_COMMAND, ICW1Commands::INITIALIZE | ICW1Commands::ICW4_PRESENT);
     IO::WriteByte(PIC2_COMMAND, ICW1Commands::INITIALIZE | ICW1Commands::ICW4_PRESENT);
+
+    // Write master and slave PIC vector offsets
+    // Remap the interrupt offsets such that IRQs are within interrupts 32 - 47.
+    IO::WriteByte(PIC1_DATA, 32);
+    IO::WriteByte(PIC2_DATA, 40);
 
     // Tell master that a slave PIC exists at IRQ2 (0000 0100)
     IO::WriteByte(PIC1_DATA, PIC1_CASCADE);
@@ -71,6 +80,10 @@ void Initialize(void)
     // Update PICs to 8086 mode instead of 8080 mode
     IO::WriteByte(PIC1_DATA, ICW4Commands::INTEL_8086_MODE);
     IO::WriteByte(PIC2_DATA, ICW4Commands::INTEL_8086_MODE);
+
+    // Restore masks saved before initialization
+    IO::WriteByte(PIC1_DATA, mask1);
+    IO::WriteByte(PIC2_DATA, mask2);
 }
 
 void Finalize(void)
