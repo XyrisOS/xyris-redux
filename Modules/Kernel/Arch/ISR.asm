@@ -1,4 +1,3 @@
-section .text
 bits 64
 
 ;
@@ -82,16 +81,17 @@ InterruptHandlerProxy:
 ;
 
 %macro Interrupt 1
-    global InterruptStub%1
-    InterruptStub%1:
+    global Interrupt%1
+    Interrupt%1:
         push 0  ; Default error code value
         push %1
         jmp InterruptHandlerProxy
 %endmacro
 
 %macro InterruptError 1
-    global InterruptStub%1
-    InterruptStub%1:
+    global InterruptError%1
+    InterruptError%1:
+        ; Error code pushed by CPU
         push %1
         jmp InterruptHandlerProxy
 %endmacro
@@ -105,7 +105,7 @@ InterruptHandlerProxy:
 %rep    256
     %if i == 8
         InterruptError i
-    %elif i >= 10 || i <= 14
+    %elif i >= 10 && i <= 14
         InterruptError i
     %else
         Interrupt i
@@ -123,6 +123,12 @@ global InterruptTable
 InterruptTable:
 %assign i 0
 %rep    256
-    dq InterruptStub%+i
+    %if i == 8
+        dq InterruptError%+i
+    %elif i >= 10 && i <= 14
+        dq InterruptError%+i
+    %else
+        dq Interrupt%+i
+    %endif
 %assign i i+1
 %endrep
