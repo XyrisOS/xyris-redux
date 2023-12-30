@@ -35,9 +35,12 @@ struct InterruptFrame {
     uint64_t rcx;
     uint64_t rbx;
     uint64_t rax;
-    // Pushed by the CPU on interrupt
+
+    // Pushed by proxies in ISR.asm
     uint64_t interrupt;
     uint64_t error;
+
+    // Pushed by the CPU on interrupt
     uint64_t rip;
     uint64_t cs;
     uint64_t rflags;
