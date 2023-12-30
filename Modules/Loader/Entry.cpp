@@ -14,12 +14,19 @@
 #include <stdint.h>
 #include <limine.h>
 
+// Variables
+
+// Extern declarations for C++ global constructors.
+extern void (*__init_array[])();
+extern void (*__init_array_end[])();
+
 static volatile struct limine_framebuffer_request framebufferRequest = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
     .revision = 0,
     .response = NULL,
 };
 
+// Functions
 
 extern "C" void LoaderEntry(void);
 
@@ -51,6 +58,11 @@ void ShowProgress(uint32_t color)
 }
 
 extern "C" void LoaderEntry(void) {
+    // Call all C++ global constructors before doing anything else.
+    for (size_t i = 0; &__init_array[i] != __init_array_end; i++) {
+        __init_array[i]();
+    }
+
     // Ensure we got a framebuffer.
     if (framebufferRequest.response == NULL || framebufferRequest.response->framebuffer_count < 1) {
         Loader::HaltAndCatchFire();
