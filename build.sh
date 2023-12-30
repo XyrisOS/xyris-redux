@@ -17,6 +17,8 @@ no_color="\033[0m"
 do_image_stage=1
 do_run_stage_debug=0
 
+build_type="Debug"
+
 show_help() {
     echo -e "TODO"
 }
@@ -53,7 +55,7 @@ build_stage() {
         -B "${DIR_BUILD}/Tools" "${DIR_TOOLS}" \
         -DCMAKE_MODULE_PATH="${DIR_CMAKE}/Modules" \
         -DCMAKE_INSTALL_PREFIX="${DIR_INSTALL}/Tools" \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        -DCMAKE_BUILD_TYPE="${build_type}"
     cmake --build "${DIR_BUILD}/Tools" -j "$(nproc)"
     cmake --install "${DIR_BUILD}/Tools"
 
@@ -65,7 +67,7 @@ build_stage() {
         -DCMAKE_MODULE_PATH="${DIR_CMAKE}/Modules" \
         -DCMAKE_INSTALL_PREFIX="${DIR_INSTALL}/Modules" \
         -DCMAKE_TOOLCHAIN_FILE="${DIR_TOOLCHAINS}/amd64-buildroot-generic.cmake" \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        -DCMAKE_BUILD_TYPE="${build_type}"
     cmake --build "${DIR_BUILD}/Modules" -j "$(nproc)"
     cmake --install "${DIR_BUILD}/Modules"
 }
@@ -204,6 +206,9 @@ while :; do
             do_run_stage_debug=1
             run_stage
             exit
+            ;;
+        --release)
+            build_type="RelWithDebInfo"
             ;;
         -k|--kernel-only)
             do_image_stage=0
