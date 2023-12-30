@@ -1,3 +1,4 @@
+section .text
 bits 64
 
 ;
@@ -67,7 +68,7 @@ InterruptHandlerProxy:
     mov rdi, rsp
     call InterruptHandler
     popax
-    add rsp, 16
+    add rsp, 16 ; pop error code and interrupt number
     iretq
 
 ;
@@ -83,16 +84,16 @@ InterruptHandlerProxy:
 %macro Interrupt 1
     global Interrupt%1
     Interrupt%1:
-        push 0  ; Default error code value
-        push %1
+        push qword 0  ; Default error code value
+        push qword %1
         jmp InterruptHandlerProxy
 %endmacro
 
 %macro InterruptError 1
-    global InterruptError%1
-    InterruptError%1:
+    global Interrupt%1
+    Interrupt%1:
         ; Error code pushed by CPU
-        push %1
+        push qword %1
         jmp InterruptHandlerProxy
 %endmacro
 
@@ -103,13 +104,15 @@ InterruptHandlerProxy:
 ;
 %assign i 0
 %rep    256
-    %if (i == 8 || (i >= 10 && i <= 14))
+    %if (i == 8 || (i >= 10 && i <= 14) || i == 17 || i == 30)
         InterruptError i
     %else
         Interrupt i
     %endif
 %assign i i+1
 %endrep
+
+section .data
 
 ;
 ; Generates a table of all interrupt (and exception) symbols for
@@ -121,10 +124,6 @@ global InterruptTable
 InterruptTable:
 %assign i 0
 %rep    256
-    %if (i == 8 || (i >= 10 && i <= 14))
-        dq InterruptError%+i
-    %else
-        dq Interrupt%+i
-    %endif
+    dq Interrupt%+i
 %assign i i+1
 %endrep
