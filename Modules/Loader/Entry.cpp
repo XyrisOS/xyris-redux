@@ -14,6 +14,12 @@
 #include <stddef.h>
 #include <stdint.h>
 
+// Variables
+
+// Extern declarations for C++ global constructors.
+extern void (*__init_array[])();
+extern void (*__init_array_end[])();
+
 static volatile limine_framebuffer_request framebufferRequest = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
     .revision = 0,
@@ -24,7 +30,7 @@ namespace Loader
 {
 
 [[noreturn]]
-static void HaltAndCatchFire()
+void HaltAndCatchFire()
 {
     asm volatile("cli");
     while (true) {
@@ -54,6 +60,10 @@ void LoaderEntry(void);
 
 void LoaderEntry(void)
 {
+    // Call all C++ global constructors before doing anything else.
+    for (size_t i = 0; &__init_array[i] != __init_array_end; i++) {
+        __init_array[i]();
+    }
     // Ensure we got a framebuffer.
     if (framebufferRequest.response == nullptr || framebufferRequest.response->framebuffer_count < 1) {
         Loader::HaltAndCatchFire();
