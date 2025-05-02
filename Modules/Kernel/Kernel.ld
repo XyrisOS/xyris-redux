@@ -16,7 +16,14 @@ PHDRS
 
 SECTIONS
 {
-    . = 0xffffffff80000000;
+    /* Standard kernel virtual address for x86_64 */
+    /* Also required by the Limine bootloader */
+    _KERNEL_BASE = 0xffffffff80000000;
+
+    /* Loaded kernel virtual address */
+    . = _KERNEL_BASE;
+    /* Start of kernel ELF memory */
+    _KERNEL_START = .;
 
     .text : {
         *(.text .text.*)
@@ -57,6 +64,12 @@ SECTIONS
         *(.bss .bss.*)
         *(COMMON)
     } :data
+
+    /* End of kernel ELF memory */
+    _KERNEL_END = .;
+
+    /* Kernel memory map address */
+    _KERNEL_MAP = 0xffff800000000000;
 
     /* Discard .note.* and .eh_frame since they may cause issues on some hosts. */
     /DISCARD/ : {

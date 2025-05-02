@@ -65,10 +65,11 @@ static void CreateEntry(
 
 void Initialize(void)
 {
-    for (size_t i = 0; i < (sizeof(InterruptTable) / sizeof(InterruptTable[i])); i++) {
+    constexpr size_t max = (sizeof(InterruptTable) / sizeof(InterruptTable[0]));
+    for (size_t i = 0; i < max; i++) {
         // Have the interrupt variable here for debugging atm.
         // TODO: Simplify by removing variable.
-        void* interrupt = &InterruptTable[i];
+        void* interrupt = InterruptTable[i];
         union Offset offset = { .value = reinterpret_cast<uintptr_t>(interrupt) };
 
         CreateEntry(idt.entries[i], offset, GateInterrupt);
