@@ -8,4 +8,4 @@ add_executable(VerifyGDT
 
 target_include_directories(VerifyGDT PRIVATE ${MODULES_KERNEL_DIR})
 
-install(TARGETS VerifyGDT DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS VerifyGDT DESTINATION .)

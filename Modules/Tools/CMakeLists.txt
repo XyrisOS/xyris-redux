@@ -1,10 +1,7 @@
-cmake_minimum_required(VERSION 3.27)
 project(Tools)
 message(STATUS "  [-] Tools")
 
 # Limine submodule is pre-built so we need to set the library here
-add_library(Limine INTERFACE
-    limine/limine.h
-)
+add_library(Limine INTERFACE)
 
-target_include_directories(Limine INTERFACE limine)
+target_include_directories(Limine INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/limine")
