@@ -1,2 +1,8 @@
+!.idea/
+
+Build/
+Distribution/
+.DS_Store
+
 # Qemu UEFI bios file used for testing
 OVMF.bin
