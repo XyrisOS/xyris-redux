@@ -6,9 +6,10 @@ include(InitializeStandardFlags)
 include(InitializeFreestandingFlags)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX
-        "${CMAKE_CURRENT_SOURCE_DIR}/Distribution"
-        CACHE PATH "Install path prefix, prepended onto install directories." FORCE
+    message(STATUS "[!] Install prefix: ${CMAKE_CURRENT_SOURCE_DIR}/Distribution")
+    set_property(
+            CACHE CMAKE_INSTALL_PREFIX
+            PROPERTY VALUE ${CMAKE_CURRENT_SOURCE_DIR}/Distribution
     )
 endif()
 
@@ -17,14 +18,15 @@ add_subdirectory(Loader)
 add_subdirectory(Kernel)
 add_subdirectory(Tools)
 
-add_custom_target(Images
-    COMMAND "${CMAKE_COMMAND}" --install "${CMAKE_BINARY_DIR}" --prefix "${CMAKE_INSTALL_PREFIX}"
-    COMMAND "${CMAKE_COMMAND}"
-        -DOUTPUT_DIR="${CMAKE_INSTALL_PREFIX}"
-        -DKERNEL_BIN="${CMAKE_INSTALL_PREFIX}/Kernel"
-        -DLIMINE_CFG="${CMAKE_INSTALL_PREFIX}/limine.cfg"
-        -DLIMINE_EFI="${CMAKE_CURRENT_SOURCE_DIR}/Tools/limine/BOOTX64.EFI"
-        -P "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Scripts/CreateModuleImages.cmake"
+add_custom_target(
+    Images
+    COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --prefix ${CMAKE_INSTALL_PREFIX}
+    COMMAND ${CMAKE_COMMAND}
+        -DOUTPUT_DIR=${CMAKE_INSTALL_PREFIX}
+        -DKERNEL_BIN=${CMAKE_INSTALL_PREFIX}/Kernel
+        -DLIMINE_CFG=${CMAKE_INSTALL_PREFIX}/limine.cfg
+        -DLIMINE_EFI=${CMAKE_CURRENT_SOURCE_DIR}/Tools/limine/BOOTX64.EFI
+        -P ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Scripts/CreateModuleImages.cmake
     DEPENDS Kernel
     USES_TERMINAL
     VERBATIM

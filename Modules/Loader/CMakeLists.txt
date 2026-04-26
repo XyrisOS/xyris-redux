@@ -7,8 +7,8 @@ add_library(Loader OBJECT
 
 target_link_libraries(Loader PRIVATE Limine)
 target_include_directories(Loader
-    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}"
-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-install(FILES limine.cfg DESTINATION .)
+install(FILES limine.cfg DESTINATION ${CMAKE_INSTALL_PREFIX})

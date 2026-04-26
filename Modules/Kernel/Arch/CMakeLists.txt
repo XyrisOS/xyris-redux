@@ -13,4 +13,4 @@ add_library(Arch OBJECT
 #       in the kernel. For the Loader it makes more sense to keep them separate since
 #       the kernel and loader should be two distinct things that interact as little as
 #       possible (and mostly unidirectionally), but internal kernel code is different.
-target_include_directories(Arch PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(Arch PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
