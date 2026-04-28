@@ -1,5 +1,5 @@
 FROM alpine:edge
-LABEL org.opencontainers.image.description "Xyris build environment container"
+LABEL org.opencontainers.image.description="Xyris build environment container"
 
 RUN apk update
 

@@ -26,6 +26,7 @@ cleanup() {
 trap cleanup EXIT
 
 cd "${SCRIPT_DIR}" || exit
+echo "[*] Downloading tarball..."
 wget "http://ftp.gnu.org/gnu/gdb/gdb-${GDB_VER}.tar.gz"
 tar -xf "gdb-${GDB_VER}.tar.gz"
 if [ ! -e "gdb-${GDB_VER}.tar.gz" ]; then
@@ -45,7 +46,7 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 for TARGET in "${CROSS_TARGETS[@]}"; do
-    echo "Building GDB for ${TARGET}"
+    echo "[*] Building GDB for ${TARGET}"
     mkdir "build-gdb-${TARGET}"
     cd "build-gdb-${TARGET}" || exit
     ../gdb-"${GDB_VER}"/configure \

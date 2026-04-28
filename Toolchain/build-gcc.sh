@@ -26,6 +26,7 @@ cleanup() {
 trap cleanup EXIT
 
 cd "${SCRIPT_DIR}" || exit
+echo "[*] Downloading tarball..."
 wget "https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.gz"
 tar -xf "gcc-${GCC_VER}.tar.gz"
 if [ ! -e "gcc-${GCC_VER}.tar.gz" ]; then
@@ -37,12 +38,12 @@ rm "gcc-${GCC_VER}.tar.gz"
 
 DARWIN_FLAGS=""
 if [ "$(uname)" = "Darwin" ]; then
-    echo "Building on Darwin -- adding extra flags..."
+    echo "[*] Building on Darwin -- adding extra flags..."
     DARWIN_FLAGS="--with-gmp=/opt/homebrew --with-mpc=/opt/homebrew --with-mpfr=/opt/homebrew"
 fi
 
 for TARGET in "${CROSS_TARGETS[@]}"; do
-    echo "Building gcc for ${TARGET}"
+    echo "[*] Building gcc for ${TARGET}"
     mkdir "build-gcc-${TARGET}"
     cd "build-gcc-${TARGET}" || exit
     ../gcc-"${GCC_VER}"/configure \

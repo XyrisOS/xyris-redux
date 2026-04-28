@@ -26,6 +26,7 @@ cleanup() {
 trap cleanup EXIT
 
 cd "${SCRIPT_DIR}" || exit
+echo "[*] Downloading tarball..."
 wget "https://ftp.gnu.org/pub/gnu/binutils/binutils-${BIN_VER}.tar.gz"
 tar -xf "binutils-${BIN_VER}.tar.gz"
 if [ ! -e "binutils-${BIN_VER}.tar.gz" ]; then
@@ -36,7 +37,7 @@ fi
 rm "binutils-${BIN_VER}.tar.gz"
 
 for TARGET in "${CROSS_TARGETS[@]}"; do
-    echo "Building binutils for ${TARGET}"
+    echo "[*] Building binutils for ${TARGET}"
     mkdir "build-binutils-${TARGET}"
     cd "build-binutils-${TARGET}" || exit
     ../binutils-"${BIN_VER}"/configure \
