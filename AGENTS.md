@@ -2,6 +2,10 @@
 - The assumed IDE is either CLion (preferred) or VSCode (fallback)
 - When working on Windows, prefer using WSL when possible
 
+## CMake Preferences
+- Local, internal variables should use lower-snake case
+- Public, exposed variables should use upper-snake case
+
 ## Project Structure
 
 The `xyris-redux` repository is effectively split into two projects, both with different sets of assumptions and
