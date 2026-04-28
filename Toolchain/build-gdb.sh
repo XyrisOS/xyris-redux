@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 GDB_VER="13.2"
 
@@ -6,7 +8,7 @@ GDB_VER="13.2"
 
 cleanup() {
     echo "Cleaning up..."
-    cd "${SCRIPT_DIR}" || exit
+    cd "${SCRIPT_DIR}"
     if [ -e "gdb-${GDB_VER}.tar.gz" ]; then
         echo "Removing tarball..."
         rm "gdb-${GDB_VER}.tar.gz"
@@ -25,7 +27,7 @@ cleanup() {
 
 trap cleanup EXIT
 
-cd "${SCRIPT_DIR}" || exit
+cd "${SCRIPT_DIR}"
 echo "[*] Downloading tarball..."
 wget "http://ftp.gnu.org/gnu/gdb/gdb-${GDB_VER}.tar.gz"
 tar -xf "gdb-${GDB_VER}.tar.gz"
@@ -48,7 +50,7 @@ fi
 for TARGET in "${CROSS_TARGETS[@]}"; do
     echo "[*] Building GDB for ${TARGET}"
     mkdir "build-gdb-${TARGET}"
-    cd "build-gdb-${TARGET}" || exit
+    cd "build-gdb-${TARGET}"
     ../gdb-"${GDB_VER}"/configure \
         --target="${TARGET}" \
         --prefix="${CROSS_PREFIX}" \
@@ -57,7 +59,7 @@ for TARGET in "${CROSS_TARGETS[@]}"; do
         "${DARWIN_FLAGS[@]}"
     make
     make install
-    cd .. || exit
+    cd ..
     rm -rf "build-gdb-${TARGET}"
 done
 

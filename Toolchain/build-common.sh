@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 nproc="$(nproc)"
 echo "Using ${nproc} cores to build tools..."
