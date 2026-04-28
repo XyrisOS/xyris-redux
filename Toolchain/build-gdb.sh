@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-GDB_VER="13.2"
+GDB_VER="17.1"
 
 . "${SCRIPT_DIR}/build-common.sh"
 

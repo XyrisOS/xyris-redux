@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-BIN_VER="2.39"
+BIN_VER="2.46.0"
 
 . "${SCRIPT_DIR}/build-common.sh"
 
