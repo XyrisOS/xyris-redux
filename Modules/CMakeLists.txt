@@ -18,19 +18,35 @@ add_subdirectory(Loader)
 add_subdirectory(Kernel)
 add_subdirectory(Tools)
 
-add_custom_target(
-    Images
-    COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --prefix ${CMAKE_INSTALL_PREFIX}
+# Distribution (Final Target)
+#   - EFI and Boot Image Creation
+set(distribution_dir "${CMAKE_INSTALL_PREFIX}")
+set(kernel_bin "${distribution_dir}/Kernel")
+set(limine_cfg "${distribution_dir}/limine.cfg")
+set(limine_efi "${CMAKE_CURRENT_SOURCE_DIR}/Tools/limine/BOOTX64.EFI")
+set(boot_img "${distribution_dir}/boot.img")
+set(efi_img "${distribution_dir}/efi.img")
+set(create_kernel_images_script "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Scripts/CreateKernelImages.cmake")
+
+add_custom_command(
+    OUTPUT "${boot_img}" "${efi_img}"
+    COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --prefix ${distribution_dir}
     COMMAND ${CMAKE_COMMAND}
-        -DOUTPUT_DIR=${CMAKE_INSTALL_PREFIX}
-        -DKERNEL_BIN=${CMAKE_INSTALL_PREFIX}/Kernel
-        -DLIMINE_CFG=${CMAKE_INSTALL_PREFIX}/limine.cfg
-        -DLIMINE_EFI=${CMAKE_CURRENT_SOURCE_DIR}/Tools/limine/BOOTX64.EFI
-        -P ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Scripts/CreateModuleImages.cmake
-    DEPENDS Kernel
+        -DBOOT_IMG=${boot_img}
+        -DEFI_IMG=${efi_img}
+        -DKERNEL_BIN=${kernel_bin}
+        -DLIMINE_CFG=${limine_cfg}
+        -DLIMINE_EFI=${limine_efi}
+        -P ${create_kernel_images_script}
+    DEPENDS
+        Kernel
+        "${CMAKE_CURRENT_SOURCE_DIR}/Loader/limine.cfg"
+        "${limine_efi}"
+        "${create_kernel_images_script}"
     USES_TERMINAL
     VERBATIM
     COMMENT "Installing kernel artifacts and generating disk images"
 )
 
-add_custom_target(Distribution DEPENDS Images)
+add_custom_target(KernelImages DEPENDS "${boot_img}" "${efi_img}")
+add_custom_target(Distribution DEPENDS KernelImages)
