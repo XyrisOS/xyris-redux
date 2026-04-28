@@ -7,46 +7,29 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(XYRIS_CROSS_TRIPLE "x86_64-elf" CACHE STRING "GNU target triple for the cross toolchain")
 set(XYRIS_CROSS_PREFIX "" CACHE PATH "Prefix containing bin/${XYRIS_CROSS_TRIPLE}-gcc and related tools")
 
-if (NOT XYRIS_CROSS_PREFIX)
-    set(_xyris_repo_cross_prefix "${CMAKE_CURRENT_LIST_DIR}/../../Local/cross")
-    if (EXISTS "${_xyris_repo_cross_prefix}/bin/${XYRIS_CROSS_TRIPLE}-gcc")
-        set(XYRIS_CROSS_PREFIX "${_xyris_repo_cross_prefix}" CACHE PATH "" FORCE)
-    elseif (EXISTS "/opt/cross/bin/${XYRIS_CROSS_TRIPLE}-gcc")
-        set(XYRIS_CROSS_PREFIX "/opt/cross" CACHE PATH "" FORCE)
+if(NOT XYRIS_CROSS_PREFIX)
+    get_filename_component(cross_prefix "${CMAKE_SOURCE_DIR}/../Toolchain/bin" ABSOLUTE)
+    if(EXISTS "${cross_prefix}/bin/${XYRIS_CROSS_TRIPLE}-gcc")
+        set(XYRIS_CROSS_PREFIX "${cross_prefix}" CACHE PATH "" FORCE)
     else()
         set(XYRIS_CROSS_PREFIX "/opt/cross" CACHE PATH "" FORCE)
     endif()
 endif()
 
-set(_xyris_cross_bin_dir "${XYRIS_CROSS_PREFIX}/bin")
+set(cross_bin "${XYRIS_CROSS_PREFIX}/bin")
 
-function(_xyris_require_cross_tool out_var tool_suffix)
-    find_program(_tool_path
-        NAMES "${XYRIS_CROSS_TRIPLE}-${tool_suffix}"
-        PATHS "${_xyris_cross_bin_dir}"
-        NO_DEFAULT_PATH
-    )
-    if (NOT _tool_path)
-        message(FATAL_ERROR
-            "Did not find '${XYRIS_CROSS_TRIPLE}-${tool_suffix}' under '${_xyris_cross_bin_dir}'. "
-            "Set XYRIS_CROSS_PREFIX to the toolchain install prefix."
-        )
-    endif()
-    set("${out_var}" "${_tool_path}" PARENT_SCOPE)
-endfunction()
-
-_xyris_require_cross_tool(CMAKE_C_COMPILER gcc)
-_xyris_require_cross_tool(CMAKE_CXX_COMPILER g++)
-_xyris_require_cross_tool(CMAKE_AR ar)
-_xyris_require_cross_tool(CMAKE_RANLIB ranlib)
-_xyris_require_cross_tool(CMAKE_NM nm)
-_xyris_require_cross_tool(CMAKE_OBJCOPY objcopy)
-_xyris_require_cross_tool(CMAKE_OBJDUMP objdump)
-_xyris_require_cross_tool(CMAKE_STRIP strip)
+set(CMAKE_C_COMPILER    "${cross_bin}/${XYRIS_CROSS_TRIPLE}-gcc")
+set(CMAKE_CXX_COMPILER  "${cross_bin}/${XYRIS_CROSS_TRIPLE}-g++")
+set(CMAKE_AR            "${cross_bin}/${XYRIS_CROSS_TRIPLE}-ar")
+set(CMAKE_RANLIB        "${cross_bin}/${XYRIS_CROSS_TRIPLE}-ranlib")
+set(CMAKE_NM            "${cross_bin}/${XYRIS_CROSS_TRIPLE}-nm")
+set(CMAKE_OBJCOPY       "${cross_bin}/${XYRIS_CROSS_TRIPLE}-objcopy")
+set(CMAKE_OBJDUMP       "${cross_bin}/${XYRIS_CROSS_TRIPLE}-objdump")
+set(CMAKE_STRIP         "${cross_bin}/${XYRIS_CROSS_TRIPLE}-strip")
 
 # Check if we can use `mold` since it's far more performant
 find_program(MOLD_BIN_PATH mold)
-if (MOLD_BIN_PATH)
+if(MOLD_BIN_PATH)
     get_filename_component(MOLD_BIN_DIR "${MOLD_BIN_PATH}" DIRECTORY)
     # https://github.com/rui314/mold/issues/1032
     # These have to be added to compile options, NOT link options
