@@ -9,7 +9,7 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     message(STATUS "[!] Install prefix: ${CMAKE_CURRENT_SOURCE_DIR}/Distribution")
     set_property(
             CACHE CMAKE_INSTALL_PREFIX
-            PROPERTY VALUE ${CMAKE_CURRENT_SOURCE_DIR}/Distribution
+            PROPERTY VALUE ${CMAKE_CURRENT_SOURCE_DIR}/Distribution/${CMAKE_BUILD_TYPE}
     )
 endif()
 
@@ -20,17 +20,16 @@ add_subdirectory(Tools)
 
 # Distribution (Final Target)
 #   - EFI and Boot Image Creation
-set(distribution_dir "${CMAKE_INSTALL_PREFIX}")
-set(kernel_bin "${distribution_dir}/Kernel")
-set(limine_cfg "${distribution_dir}/limine.cfg")
+set(kernel_bin "${CMAKE_INSTALL_PREFIX}/Kernel")
+set(limine_cfg "${CMAKE_INSTALL_PREFIX}/limine.cfg")
 set(limine_efi "${CMAKE_CURRENT_SOURCE_DIR}/Tools/limine/BOOTX64.EFI")
-set(boot_img "${distribution_dir}/boot.img")
-set(efi_img "${distribution_dir}/efi.img")
+set(boot_img "${CMAKE_INSTALL_PREFIX}/boot.img")
+set(efi_img "${CMAKE_INSTALL_PREFIX}/efi.img")
 set(create_kernel_images_script "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Scripts/CreateKernelImages.cmake")
 
 add_custom_command(
     OUTPUT "${boot_img}" "${efi_img}"
-    COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --prefix ${distribution_dir}
+    COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --prefix ${CMAKE_INSTALL_PREFIX}
     COMMAND ${CMAKE_COMMAND}
         -DBOOT_IMG=${boot_img}
         -DEFI_IMG=${efi_img}
