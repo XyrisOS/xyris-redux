@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.27)
 project(Xyris LANGUAGES C CXX ASM_NASM)
 
-list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Modules")
+# Provide a reference to the top level project for shared sources
+set(CMAKE_CURRENT_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Modules)
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_PROJECT_DIR}/CMake/Common)
 include(InitializeStandardFlags)
 include(InitializeFreestandingFlags)
 

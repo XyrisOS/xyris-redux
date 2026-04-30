@@ -6,6 +6,6 @@ add_executable(VerifyGDT
     ${MODULES_KERNEL_DIR}/Arch/GDT.cpp
 )
 
-target_include_directories(VerifyGDT PRIVATE ${MODULES_KERNEL_DIR})
+target_include_directories(VerifyGDT PRIVATE ${MODULES_KERNEL_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 install(TARGETS VerifyGDT DESTINATION .)
