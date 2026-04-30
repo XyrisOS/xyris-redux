@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Build (Debug)" ENABLED="true" GENERATION_DIR="Build/Debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-G Ninja -DCMAKE_TOOLCHAIN_FILE=CMake/Toolchains/amd64-buildroot-generic.cmake" />
+      <configuration PROFILE_NAME="Build (Release)" ENABLED="true" GENERATION_DIR="Build/Release" CONFIG_NAME="Release" GENERATION_OPTIONS="-G Ninja -DCMAKE_TOOLCHAIN_FILE=CMake/Toolchains/amd64-buildroot-generic.cmake" />
+    </configurations>
+  </component>
+</project>
