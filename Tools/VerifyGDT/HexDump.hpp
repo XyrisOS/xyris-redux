@@ -1,10 +1,19 @@
-#include <iostream>
 #include <iomanip>
 
+std::ostream& hexDump(
+    std::ostream &os,
+    const void *buffer,
+    std::size_t bufsize,
+    bool showPrintableChars = true
+);
+
 // https://codereview.stackexchange.com/a/165162
-std::ostream& hexDump(std::ostream &os, const void *buffer,
-                      std::size_t bufsize, bool showPrintableChars = true)
-{
+std::ostream& hexDump(
+    std::ostream &os,
+    const void *buffer,
+    std::size_t bufsize,
+    bool showPrintableChars
+) {
     if (buffer == nullptr)
     {
         return os;

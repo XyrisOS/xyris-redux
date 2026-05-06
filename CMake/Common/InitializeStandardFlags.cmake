@@ -1,5 +1,26 @@
-set(C_CXX_WARNINGS -Wall -Werror -Wextra -Wundef -Winline -Wshadow -Wformat=2 -Wcast-align -Wno-long-long -Wpointer-arith -Wwrite-strings -Wredundant-decls -Wdouble-promotion -Wno-unused-function -Wmissing-declarations)
-set(C_WARNINGS ${C_CXX_WARNINGS} -Wnested-externs -Wstrict-prototypes -Wmissing-prototypes)
+set(C_CXX_WARNINGS
+        -Wall
+        -Werror
+        -Wextra
+        -Wundef
+        -Winline
+        -Wshadow
+        -Wformat=2
+        -Wcast-align
+        -Wno-long-long
+        -Wpointer-arith
+        -Wwrite-strings
+        -Wredundant-decls
+        -Wdouble-promotion
+        -Wno-unused-function
+        -Wmissing-declarations
+)
+set(C_WARNINGS
+        ${C_CXX_WARNINGS}
+        -Wnested-externs
+        -Wstrict-prototypes
+        -Wmissing-prototypes
+)
 set(CXX_WARNINGS ${C_CXX_WARNINGS})
 
 set(C_CXX_FLAGS -fdiagnostics-color=always)

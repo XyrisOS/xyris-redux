@@ -1,7 +1,7 @@
 #include <Arch/GDT.hpp>
 #include <cstdlib>
 #include <iostream>
-#include "../HexDump.hpp"
+#include "HexDump.hpp"
 
 int main(int argc, char* argv[]) {
     (void) argc;
@@ -12,6 +12,8 @@ int main(int argc, char* argv[]) {
 }
 
 namespace GDT {
+    extern "C" void FlushGDT(GDTR* pGDTR);
+
     extern "C" void FlushGDT(GDTR* pGDTR) {
         std::cout << "Flushing GDTR! [" << pGDTR << "]" << std::endl
             << "  Size: " << pGDTR->size << std::endl

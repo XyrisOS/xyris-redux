@@ -1,12 +1,14 @@
 #!/bin/bash
+set -euo pipefail
+
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-BIN_VER="2.39"
+BIN_VER="2.46.0"
 
 . "${SCRIPT_DIR}/build-common.sh"
 
 cleanup() {
     echo "Cleaning up..."
-    cd "${SCRIPT_DIR}" || exit
+    cd "${SCRIPT_DIR}"
     if [ -e "binutils-${BIN_VER}.tar.gz" ]; then
         echo "Removing tarball..."
         rm "binutils-${BIN_VER}.tar.gz"
@@ -25,7 +27,8 @@ cleanup() {
 
 trap cleanup EXIT
 
-cd "${SCRIPT_DIR}" || exit
+cd "${SCRIPT_DIR}"
+echo "[*] Downloading tarball..."
 wget "https://ftp.gnu.org/pub/gnu/binutils/binutils-${BIN_VER}.tar.gz"
 tar -xf "binutils-${BIN_VER}.tar.gz"
 if [ ! -e "binutils-${BIN_VER}.tar.gz" ]; then
@@ -36,9 +39,9 @@ fi
 rm "binutils-${BIN_VER}.tar.gz"
 
 for TARGET in "${CROSS_TARGETS[@]}"; do
-    echo "Building binutils for ${TARGET}"
+    echo "[*] Building binutils for ${TARGET}"
     mkdir "build-binutils-${TARGET}"
-    cd "build-binutils-${TARGET}" || exit
+    cd "build-binutils-${TARGET}"
     ../binutils-"${BIN_VER}"/configure \
         --target="${TARGET}" \
         --prefix="${CROSS_PREFIX}" \
@@ -47,7 +50,7 @@ for TARGET in "${CROSS_TARGETS[@]}"; do
         --disable-werror
     make
     make install-strip
-    cd .. || exit
+    cd ..
     rm -rf "build-binutils-${TARGET}"
 done
 

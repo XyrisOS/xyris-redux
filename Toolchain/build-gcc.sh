@@ -1,12 +1,14 @@
 #!/bin/bash
+set -euo pipefail
+
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-GCC_VER="12.2.0"
+GCC_VER="15.2.0"
 
 . "${SCRIPT_DIR}/build-common.sh"
 
 cleanup() {
     echo "Cleaning up..."
-    cd "${SCRIPT_DIR}" || exit
+    cd "${SCRIPT_DIR}"
     if [ -e "gcc-${GCC_VER}.tar.gz" ]; then
         echo "Removing tarball..."
         rm "gcc-${GCC_VER}.tar.gz"
@@ -25,7 +27,8 @@ cleanup() {
 
 trap cleanup EXIT
 
-cd "${SCRIPT_DIR}" || exit
+cd "${SCRIPT_DIR}"
+echo "[*] Downloading tarball..."
 wget "https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.gz"
 tar -xf "gcc-${GCC_VER}.tar.gz"
 if [ ! -e "gcc-${GCC_VER}.tar.gz" ]; then
@@ -37,14 +40,14 @@ rm "gcc-${GCC_VER}.tar.gz"
 
 DARWIN_FLAGS=""
 if [ "$(uname)" = "Darwin" ]; then
-    echo "Building on Darwin -- adding extra flags..."
+    echo "[*] Building on Darwin -- adding extra flags..."
     DARWIN_FLAGS="--with-gmp=/opt/homebrew --with-mpc=/opt/homebrew --with-mpfr=/opt/homebrew"
 fi
 
 for TARGET in "${CROSS_TARGETS[@]}"; do
-    echo "Building gcc for ${TARGET}"
+    echo "[*] Building gcc for ${TARGET}"
     mkdir "build-gcc-${TARGET}"
-    cd "build-gcc-${TARGET}" || exit
+    cd "build-gcc-${TARGET}"
     ../gcc-"${GCC_VER}"/configure \
         --target="${TARGET}" \
         --prefix="${CROSS_PREFIX}" \
@@ -56,7 +59,7 @@ for TARGET in "${CROSS_TARGETS[@]}"; do
     make all-target-libgcc
     make install-strip-gcc
     make install-strip-target-libgcc
-    cd .. || exit
+    cd ..
     rm -rf "build-gcc-${TARGET}"
 done
 

@@ -1,0 +1,31 @@
+## Dev environment tips
+- The assumed IDE is either CLion (preferred) or VSCode (fallback)
+- When working on Windows, prefer using WSL when possible
+
+## CMake Preferences
+- Local, internal variables should use lower-snake case
+- Public, exposed variables should use upper-snake case
+
+## Project Structure
+
+The `xyris-redux` repository is effectively split into two projects, both with different sets of assumptions and
+requirements. They are as follows:
+
+- `Modules`
+  - Freestanding kernel code broken up into separate components that all combine to create a single, functional kernel
+    and operating system
+- `Tools`
+  - Tools and other components that are **not** freestanding and use the host's compiler
+  - These tools and other components are used for validating and testing the components defined in `Modules`
+
+## Kernel
+- Broken up into multiple different components within the `Modules` directory that all create a single cohesive kernel
+  when combined. This can include things like bootloader-to-kernel hand-off, CPU setup, the scheduler, memory manager,
+  etc.
+- The current target ISA is x86-64.
+- The only supported boot method is Limine using UEFI. BIOS is not supported.
+- Modern hardware is the target and legacy x86 BIOS calls, hardware, memory segmenting, etc. is to be avoided
+
+## Tools
+- It is OK and expected that the tools CMake reaches into the `Modules` directory despite being in a different directory
+- The host hardware and toolchain is the build target for everything within `Tools`
