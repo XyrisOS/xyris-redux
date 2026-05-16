@@ -11,6 +11,7 @@
 
 #include <Entry.hpp>
 #include <Arch.hpp>
+#include <HaltAndCatchFire.hpp>
 
 extern "C" void KernelSwiftRun(void);
 
@@ -23,7 +24,7 @@ void Entry(void) {
 
     // Loop on tasks
 
-    Loader::HaltAndCatchFire();
+    Runtime::HaltAndCatchFire();
 }
 
 }

@@ -10,6 +10,7 @@
  */
 
 #include <Entry.hpp>
+#include <HaltAndCatchFire.hpp>
 #include <stddef.h>
 #include <stdint.h>
 #include <limine.h>
@@ -25,15 +26,6 @@ extern "C" void LoaderEntry(void);
 
 
 namespace Loader {
-
-[[noreturn]]
-void HaltAndCatchFire(void) {
-    asm volatile ("cli");
-    while (true) {
-        asm volatile ("hlt");
-    }
-}
-
 
 void ShowProgress(void)
 {
@@ -56,7 +48,7 @@ extern "C" void LoaderShowProgress(void) {
 extern "C" void LoaderEntry(void) {
     // Ensure we got a framebuffer.
     if (framebufferRequest.response == NULL || framebufferRequest.response->framebuffer_count < 1) {
-        Loader::HaltAndCatchFire();
+        Runtime::HaltAndCatchFire();
     }
 
     Kernel::Entry();

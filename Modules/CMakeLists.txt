@@ -20,6 +20,7 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 message(STATUS "[*] Modules")
+add_subdirectory(Runtime)
 add_subdirectory(Loader)
 add_subdirectory(Kernel)
 add_subdirectory(Tools)

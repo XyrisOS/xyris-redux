@@ -18,6 +18,7 @@ target_link_options(Kernel PRIVATE -Wl,--script=${LINKER_SCRIPT})
 target_link_libraries(Kernel PRIVATE
     Loader
     Arch
+    Runtime
     KernelSwift
 )
 
