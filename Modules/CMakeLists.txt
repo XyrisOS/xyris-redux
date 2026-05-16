@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
 cmake_policy(SET CMP0157 NEW)
-
-# Swift's compiler check runs during project(), before target-level options exist.
-# Keep its Clang module cache inside the build tree just like normal Swift targets.
-set(XYRIS_SWIFT_MODULE_CACHE_PATH "${CMAKE_BINARY_DIR}/SwiftModuleCache" CACHE PATH "Writable module cache directory for Embedded Swift builds")
-set(CMAKE_Swift_FLAGS_INIT "-module-cache-path ${XYRIS_SWIFT_MODULE_CACHE_PATH}")
-set(CMAKE_Swift_COMPILATION_MODE wholemodule)
-
 project(Xyris LANGUAGES C CXX ASM_NASM Swift)
 
 # Provide a reference to the top level project for shared sources

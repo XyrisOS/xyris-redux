@@ -18,6 +18,7 @@ endif()
 
 set(cross_bin "${XYRIS_CROSS_PREFIX}/bin")
 
+# C / C++
 set(CMAKE_C_COMPILER    "${cross_bin}/${XYRIS_CROSS_TRIPLE}-gcc")
 set(CMAKE_CXX_COMPILER  "${cross_bin}/${XYRIS_CROSS_TRIPLE}-g++")
 set(CMAKE_AR            "${cross_bin}/${XYRIS_CROSS_TRIPLE}-ar")
@@ -26,6 +27,9 @@ set(CMAKE_NM            "${cross_bin}/${XYRIS_CROSS_TRIPLE}-nm")
 set(CMAKE_OBJCOPY       "${cross_bin}/${XYRIS_CROSS_TRIPLE}-objcopy")
 set(CMAKE_OBJDUMP       "${cross_bin}/${XYRIS_CROSS_TRIPLE}-objdump")
 set(CMAKE_STRIP         "${cross_bin}/${XYRIS_CROSS_TRIPLE}-strip")
+# Swift
+set(XYRIS_SWIFT_TARGET_TRIPLE       "x86_64-unknown-none-elf")
+set(XYRIS_SWIFT_MODULE_CACHE_PATH   "${CMAKE_BINARY_DIR}/SwiftModuleCache")
 
 # Check if we can use `mold` since it's far more performant
 find_program(MOLD_BIN_PATH mold)
