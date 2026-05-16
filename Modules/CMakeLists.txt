@@ -1,5 +1,13 @@
-cmake_minimum_required(VERSION 3.27)
-project(Xyris LANGUAGES C CXX ASM_NASM)
+cmake_minimum_required(VERSION 3.29)
+cmake_policy(SET CMP0157 NEW)
+
+# Swift's compiler check runs during project(), before target-level options exist.
+# Keep its Clang module cache inside the build tree just like normal Swift targets.
+set(XYRIS_SWIFT_MODULE_CACHE_PATH "${CMAKE_BINARY_DIR}/SwiftModuleCache" CACHE PATH "Writable module cache directory for Embedded Swift builds")
+set(CMAKE_Swift_FLAGS_INIT "-module-cache-path ${XYRIS_SWIFT_MODULE_CACHE_PATH}")
+set(CMAKE_Swift_COMPILATION_MODE wholemodule)
+
+project(Xyris LANGUAGES C CXX ASM_NASM Swift)
 
 # Provide a reference to the top level project for shared sources
 set(CMAKE_CURRENT_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
@@ -8,6 +16,7 @@ list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Modules)
 list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_PROJECT_DIR}/CMake/Common)
 include(InitializeStandardFlags)
 include(InitializeFreestandingFlags)
+include(InitializeEmbeddedSwift)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     message(STATUS "[!] Install prefix: ${CMAKE_CURRENT_SOURCE_DIR}/Distribution")

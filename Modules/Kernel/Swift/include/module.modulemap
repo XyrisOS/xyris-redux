@@ -1,0 +1,4 @@
+module XyrisKernelBridge {
+    header "SwiftBridge.h"
+    export *
+}

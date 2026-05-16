@@ -12,12 +12,14 @@
 #include <Entry.hpp>
 #include <Arch.hpp>
 
+extern "C" void KernelSwiftRun(void);
+
 namespace Kernel
 {
 
 void Entry(void) {
     Arch::Initialize();
-    Loader::ShowProgress();
+    KernelSwiftRun();
 
     // Loop on tasks
 

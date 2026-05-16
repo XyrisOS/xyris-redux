@@ -2,6 +2,7 @@ project(Kernel)
 message(STATUS "  [-] Kernel")
 
 add_subdirectory(Arch)
+add_subdirectory(Swift)
 
 add_executable(Kernel
     Entry.cpp
@@ -13,6 +14,7 @@ target_link_options(Kernel PRIVATE -Wl,--script=${LINKER_SCRIPT})
 target_link_libraries(Kernel PRIVATE
     Loader
     Arch
+    KernelSwift
 )
 
 install(TARGETS Kernel DESTINATION ${CMAKE_INSTALL_PREFIX})
