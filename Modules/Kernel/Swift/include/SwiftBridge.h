@@ -4,7 +4,7 @@
 extern "C" {
 #endif
 
-void xyris_loader_show_progress(void);
+void LoaderShowProgress(void);
 
 #ifdef __cplusplus
 }

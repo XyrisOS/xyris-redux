@@ -37,3 +37,5 @@ void HaltAndCatchFire(void);
 void ShowProgress(void);
 
 }
+
+extern "C" void LoaderShowProgress(void);

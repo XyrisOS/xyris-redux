@@ -49,10 +49,9 @@ void ShowProgress(void)
 
 }
 
-extern "C" void xyris_loader_show_progress(void) {
+extern "C" void LoaderShowProgress(void) {
     Loader::ShowProgress();
 }
-
 
 extern "C" void LoaderEntry(void) {
     // Ensure we got a framebuffer.
