@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.29)
 cmake_policy(SET CMP0157 NEW)
 project(Xyris LANGUAGES C CXX ASM_NASM Swift)
 
+# Log toolchain information for debugging
+message(STATUS "[*] Toolchain")
+message(STATUS "  [-] C: ${CMAKE_C_COMPILER}")
+message(STATUS "  [-] C++: ${CMAKE_CXX_COMPILER}")
+message(STATUS "  [-] Swift: ${CMAKE_Swift_COMPILER}")
+
 # Provide a reference to the top level project for shared sources
 set(CMAKE_CURRENT_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
@@ -9,7 +15,6 @@ list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Modules)
 list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_PROJECT_DIR}/CMake/Common)
 include(InitializeStandardFlags)
 include(InitializeFreestandingFlags)
-include(InitializeEmbeddedSwift)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     message(STATUS "[!] Install prefix: ${CMAKE_CURRENT_SOURCE_DIR}/Distribution")

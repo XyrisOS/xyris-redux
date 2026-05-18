@@ -18,7 +18,7 @@ set(C_CXX_FREESTANDING_FLAGS
     -fno-omit-frame-pointer
 )
 # C++ flags
-set(CXX_FLAGS
+set(CXX_FREESTANDING_FLAGS
     ${C_CXX_FREESTANDING_FLAGS}
     -mno-red-zone
     -fno-use-cxa-atexit
@@ -26,11 +26,21 @@ set(CXX_FLAGS
     -fno-rtti
 )
 # C flags
-set(C_FLAGS
+set(C_FREESTANDING_FLAGS
     ${C_CXX_FREESTANDING_FLAGS}
+)
+# Swift flags
+# Enable "wmo" as needed by Embedded Swift
+set(CMAKE_Swift_COMPILATION_MODE wholemodule)
+set(SWIFT_FREESTANDING_FLAGS
+    -target ${XYRIS_SWIFT_TARGET_TRIPLE}
+    -Osize
+    # TODO: Remove this once we have allocators (or stubs) in Loader and Kernel
+    -no-allocations
 )
 
 add_compile_options(
-    "$<$<COMPILE_LANGUAGE:CXX>:${CXX_FLAGS}>"
-    "$<$<COMPILE_LANGUAGE:C>:${C_FLAGS}>"
+    "$<$<COMPILE_LANGUAGE:CXX>:${CXX_FREESTANDING_FLAGS}>"
+    "$<$<COMPILE_LANGUAGE:C>:${C_FREESTANDING_FLAGS}>"
+    "$<$<COMPILE_LANGUAGE:Swift>:${SWIFT_FREESTANDING_FLAGS}>"
 )
