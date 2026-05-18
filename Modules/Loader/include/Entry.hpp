@@ -29,5 +29,3 @@ namespace Loader
 void ShowProgress(void);
 
 }
-
-extern "C" void LoaderShowProgress(void);

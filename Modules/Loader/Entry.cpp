@@ -41,10 +41,6 @@ void ShowProgress(void)
 
 }
 
-extern "C" void LoaderShowProgress(void) {
-    Loader::ShowProgress();
-}
-
 extern "C" void LoaderEntry(void) {
     // Ensure we got a framebuffer.
     if (framebufferRequest.response == NULL || framebufferRequest.response->framebuffer_count < 1) {
