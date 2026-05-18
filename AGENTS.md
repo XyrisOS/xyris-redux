@@ -2,6 +2,11 @@
 - The assumed IDE is either CLion (preferred) or VSCode (fallback)
 - When working on Windows, prefer using WSL when possible
 
+## Programming Languages
+- Swift (Embedded) 6.3.2
+- C++ 23
+- C 23
+
 ## CMake Preferences
 - Local, internal variables should use lower-snake case
 - Public, exposed variables should use upper-snake case
