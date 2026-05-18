@@ -18,6 +18,7 @@ endif()
 
 set(cross_bin "${XYRIS_CROSS_PREFIX}/bin")
 
+# C / C++
 set(CMAKE_C_COMPILER    "${cross_bin}/${XYRIS_CROSS_TRIPLE}-gcc")
 set(CMAKE_CXX_COMPILER  "${cross_bin}/${XYRIS_CROSS_TRIPLE}-g++")
 set(CMAKE_AR            "${cross_bin}/${XYRIS_CROSS_TRIPLE}-ar")
