@@ -39,7 +39,7 @@
         {
             "type": "shell",
             "label": "Run (No Debug)",
-            "command": "./Meta/build.sh",
+            "command": "./Meta/launch.sh",
             "args": [
                 "--run"
             ],
@@ -48,7 +48,7 @@
         {
             "type": "shell",
             "label": "Run (Debug)",
-            "command": "./Meta/build.sh",
+            "command": "./Meta/launch.sh",
             "args": [
                 "--debug"
             ],
