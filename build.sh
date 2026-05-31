@@ -190,6 +190,7 @@ run_stage() {
         -m 4G
         -rtc clock=host
         -serial stdio
+        -vga std
         -monitor telnet:127.0.0.1:4444,server,nowait
     )
 
