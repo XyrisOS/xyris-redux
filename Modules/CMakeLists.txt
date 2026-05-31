@@ -53,11 +53,3 @@ add_custom_command(
 
 add_custom_target(KernelImages DEPENDS "${boot_img}" "${efi_img}")
 add_custom_target(Distribution DEPENDS KernelImages)
-
-add_custom_target(
-    SetupDebugQEMU
-    COMMAND "${CMAKE_CURRENT_PROJECT_DIR}/Meta/launch.sh" --debug --background
-    DEPENDS Distribution
-    USES_TERMINAL
-    VERBATIM
-)
