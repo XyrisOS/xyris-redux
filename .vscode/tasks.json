@@ -4,7 +4,7 @@
         {
             "type": "shell",
             "label": "Build",
-            "command": "./build.sh",
+            "command": "./Meta/build.sh",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -16,7 +16,7 @@
         {
             "type": "shell",
             "label": "Build (Image)",
-            "command": "./build.sh",
+            "command": "./Meta/build.sh",
             "group": {
                 "kind": "build"
             },
@@ -30,7 +30,7 @@
         {
             "type": "shell",
             "label": "Clean",
-            "command": "./build.sh",
+            "command": "./Meta/build.sh",
             "args": [
                 "--clean"
             ],
@@ -39,7 +39,7 @@
         {
             "type": "shell",
             "label": "Run (No Debug)",
-            "command": "./build.sh",
+            "command": "./Meta/build.sh",
             "args": [
                 "--run"
             ],
@@ -48,7 +48,7 @@
         {
             "type": "shell",
             "label": "Run (Debug)",
-            "command": "./build.sh",
+            "command": "./Meta/build.sh",
             "args": [
                 "--debug"
             ],

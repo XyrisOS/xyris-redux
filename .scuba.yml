@@ -1,5 +1,5 @@
 image: xyris-redux-build:1.0.0
 docker_args: '--net="host"'
 aliases:
-  build: ./build.sh
-  clean: ./build.sh --clean
+  build: ./Meta/build.sh
+  clean: ./Meta/build.sh --clean
