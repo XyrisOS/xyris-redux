@@ -1,6 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="QEMU Debug" type="CLion_Remote" version="1" remoteCommand="localhost:1234" symbolFile="$ProjectFileDir$/Distribution/Debug/Kernel" sysroot="">
     <debugger kind="GDB" isBundled="true" />
-    <method v="2" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="QEMU Debug Setup" run_configuration_type="CMakeRunConfiguration" />
+    </method>
   </configuration>
 </component>

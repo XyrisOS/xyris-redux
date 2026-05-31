@@ -60,7 +60,6 @@ run_stage() {
         -drive "if=none,media=cdrom,id=boot,file=${boot}"
         -m 4G
         -rtc clock=host
-        -serial stdio
         -vga std
         -monitor telnet:127.0.0.1:4444,server,nowait
     )
@@ -76,12 +75,19 @@ run_stage() {
     fi
 
     if [ $do_run_stage_background = 1 ]; then
-      echo -e "${light_blue}Starting qemu... (in background)${no_color}"
-      qemu-system-x86_64 "${arguments[@]}" &
+        echo -e "${light_blue}Starting qemu... (daemonized)${no_color}"
+        arguments+=(
+            -serial vc
+            -daemonize
+        )
     else
-      echo -e "${light_blue}Starting qemu...${no_color}"
-      qemu-system-x86_64 "${arguments[@]}"
+        echo -e "${light_blue}Starting qemu...${no_color}"
+        arguments+=(
+            -serial stdio
+        )
     fi
+
+    qemu-system-x86_64 "${arguments[@]}"
 }
 
 while (($#)); do
