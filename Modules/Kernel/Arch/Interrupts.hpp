@@ -14,11 +14,10 @@
 namespace Interrupts
 {
 
-void enable(void);
-void disable(void);
+void enable();
+void disable();
 
-template<typename Function>
-void criticalRegion(Function criticalWork)
+template<typename Function> void criticalRegion(Function criticalWork)
 {
     disable();
     criticalWork();

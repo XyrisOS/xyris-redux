@@ -1,5 +1,5 @@
 /**
- * @file ports.hpp
+ * @file Ports.hpp
  * @author Keeton Feavel (kfeavel@xyr.is)
  * @brief Ports header file. Provides inline functions
  * for getting and setting values at different ports.
@@ -18,7 +18,8 @@
 #pragma once
 #include <stdint.h>
 
-namespace Ports {
+namespace Ports
+{
 
 /**
  * @brief Reads a byte (8 bits) off the CPU bus at a given port address

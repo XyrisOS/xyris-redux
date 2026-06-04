@@ -10,13 +10,13 @@
  */
 
 #include "Arch.hpp"
-#include "Interrupts.hpp"
 #include "GDT.hpp"
+#include "Interrupts.hpp"
 
 namespace Arch
 {
 
-void Initialize(void)
+void Initialize()
 {
     Interrupts::criticalRegion([] {
         GDT::Initialize();
