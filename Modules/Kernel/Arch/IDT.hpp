@@ -82,6 +82,6 @@ static_assert(sizeof(IDTR) == 10, "IDTR size assertion failure");
 
 // Functions
 
-void Initialize(void);
+void Initialize();
 
 }

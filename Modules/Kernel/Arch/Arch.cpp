@@ -28,7 +28,7 @@ void Initialize()
 }
 
 [[noreturn]]
-void HaltAndCatchFire(void) {
+void HaltAndCatchFire() {
     Interrupts::Disable();
     while (true) {
         asm volatile ("hlt");

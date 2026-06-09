@@ -10,7 +10,6 @@
  */
 
 #include "GDT.hpp"
-#include <stddef.h>
 
 namespace GDT
 {

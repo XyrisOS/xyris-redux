@@ -17,8 +17,8 @@ namespace PIC
 
 // Functions
 
-void Initialize(void);
-void Finalize(void);
+void Initialize();
+void Finalize();
 
 void EndOfInterrupt(uint64_t id);
 

@@ -38,7 +38,7 @@ void HaltAndCatchFire()
     }
 }
 
-void ShowProgress(uint32_t color)
+void ShowProgress(const uint32_t color)
 {
     // Fetch the first framebuffer.
     const limine_framebuffer* framebuffer = framebufferRequest.response->framebuffers[0];

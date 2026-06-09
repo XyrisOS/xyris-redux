@@ -21,6 +21,6 @@ void Initialize();
  *
  */
 [[noreturn]]
-void HaltAndCatchFire(void);
+void HaltAndCatchFire();
 
 }

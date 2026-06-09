@@ -54,7 +54,7 @@ enum Actions : uint8_t {
 
 // Functions
 
-void Initialize(void)
+void Initialize()
 {
     // TODO: There's a lot of magic going on here that I don't fully understand.
 
@@ -86,15 +86,15 @@ void Initialize(void)
     IO::WriteByte(PIC2_DATA, mask2);
 }
 
-void Finalize(void)
+void Finalize()
 {
     IO::WriteByte(PIC2_DATA, FINALIZE);
     IO::WriteByte(PIC1_DATA, FINALIZE);
 }
 
-void EndOfInterrupt(uint64_t id)
+void EndOfInterrupt(const uint64_t id)
 {
-    // Interrupts and exceptions are treated the same and as such we need to
+    // Interrupts and exceptions are treated the same, and as such we need to
     // account for all the exceptions (32 of them) and then offset by the
     // interrupts that require acknowledgement on the secondary PIC (which is
     // 8 since the 8259 handles 8 interrupts per controller), which results
