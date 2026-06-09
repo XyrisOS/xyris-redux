@@ -16,11 +16,10 @@ namespace Kernel
 
 /**
  * @brief Kernel entry point symbol is required but not defined by Loader.
- * Whatever the Loader is linked against must provide a Kerne::Entry
- * implementation.
+ * Whatever the Loader is linked against must provide a `Kernel::Entry` implementation.
  *
  */
-void Entry(void);
+void Entry();
 
 }
 
@@ -32,8 +31,8 @@ namespace Loader
  *
  */
 [[noreturn]]
-void HaltAndCatchFire(void);
+void HaltAndCatchFire();
 
-void ShowProgress(void);
+void ShowProgress();
 
 }

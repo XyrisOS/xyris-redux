@@ -17,15 +17,15 @@ namespace GDT
 
 // Variables
 
-static GDT gdt = GDT();
-static GDTR gdtr = GDTR();
+static auto gdt = GDT();
+static auto gdtr = GDTR();
 
 // Functions
 
 // Implemented by GDT.asm
 extern "C" void FlushGDT(GDTR* pGDTR);
 
-static void CommitAndFlush(void)
+static void CommitAndFlush()
 {
     // Update GDT register and flush
     gdtr = {
@@ -37,9 +37,9 @@ static void CommitAndFlush(void)
 }
 
 static void CreateEntry(
-    Entry &entry,
-    const Base &base,
-    const Limit &limit,
+    Entry& entry,
+    const Base& base,
+    const Limit& limit,
     const bool executable,
     const uint8_t privilege)
 {
@@ -49,7 +49,7 @@ static void CreateEntry(
         .accessed = 0,
         .rw = 1,
         .dc = 0,
-        .executable = (unsigned int)(executable ? 1 : 0),
+        .executable = static_cast<unsigned int>(executable ? 1 : 0),
         .system = 1,
         .privilege = privilege,
         .present = 1,
@@ -57,16 +57,16 @@ static void CreateEntry(
         .reserved = 0,
         .longMode = 1,
         .size = 0,
-        .granulatity = 1,
+        .granularity = 1,
         .baseHigh = base.section.high,
     };
 }
 
-void Initialize(void)
+void Initialize()
 {
     // Base and limit are the same for all entries on x86_64
-    const union Base base = { .value = 0 };
-    const union Limit limit = { .value = 0 };
+    constexpr Base base = { .value = 0 };
+    constexpr Limit limit = { .value = 0 };
 
     CreateEntry(gdt.kernelCode(), base, limit, true, 0);
     CreateEntry(gdt.kernelData(), base, limit, false, 0);

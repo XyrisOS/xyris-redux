@@ -10,51 +10,53 @@
  */
 
 #include <Entry.hpp>
+#include <limine.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <limine.h>
 
-static volatile struct limine_framebuffer_request framebufferRequest = {
+static volatile limine_framebuffer_request framebufferRequest = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
     .revision = 0,
-    .response = NULL,
+    .response = nullptr,
 };
 
-
-extern "C" void LoaderEntry(void);
-
-
-namespace Loader {
+namespace Loader
+{
 
 [[noreturn]]
-void HaltAndCatchFire(void) {
-    asm volatile ("cli");
+void HaltAndCatchFire()
+{
+    asm volatile("cli");
     while (true) {
-        asm volatile ("hlt");
+        asm volatile("hlt");
     }
 }
 
-
-void ShowProgress(void)
+void ShowProgress()
 {
     // Fetch the first framebuffer.
-    struct limine_framebuffer *framebuffer = framebufferRequest.response->framebuffers[0];
+    const limine_framebuffer* framebuffer = framebufferRequest.response->framebuffers[0];
 
     // Note: we assume the framebuffer model is RGB with 32-bit pixels.
     for (size_t i = 0; i < 100; i++) {
-        uint32_t* fb_ptr = reinterpret_cast<uint32_t*>(framebuffer->address);
+        auto* fb_ptr = static_cast<uint32_t*>(framebuffer->address);
         fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xffffff;
     }
 }
 
 }
 
+extern "C" {
 
-extern "C" void LoaderEntry(void) {
+void LoaderEntry(void);
+
+void LoaderEntry(void)
+{
     // Ensure we got a framebuffer.
-    if (framebufferRequest.response == NULL || framebufferRequest.response->framebuffer_count < 1) {
+    if (framebufferRequest.response == nullptr || framebufferRequest.response->framebuffer_count < 1) {
         Loader::HaltAndCatchFire();
     }
 
     Kernel::Entry();
+}
 }

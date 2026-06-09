@@ -15,7 +15,7 @@
 namespace Kernel
 {
 
-void Entry(void) {
+void Entry() {
     Arch::Initialize();
     Loader::ShowProgress();
 
