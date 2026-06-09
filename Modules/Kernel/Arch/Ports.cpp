@@ -12,7 +12,8 @@
 
 namespace IO
 {
-    uint8_t ReadByte(uint16_t port)
+
+uint8_t ReadByte(uint16_t port)
 {
     uint8_t result;
     asm volatile("inb %1, %0"
@@ -59,4 +60,5 @@ void WriteLong(uint16_t port, uint32_t data)
                  :
                  : "a"(data), "Nd"(port));
 }
+
 }

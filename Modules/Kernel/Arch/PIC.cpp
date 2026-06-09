@@ -18,38 +18,38 @@ namespace PIC
 // Types
 
 enum ICW1Commands : uint8_t {
-    ICW4_PRESENT    = 0x01, // ICW4 will be present
-    SINGLE_MODE     = 0x02, // Single (cascade) mode
-    INTERVAL_4      = 0x04, // Call address interval 4 (8)
-    LEVEL_TRIGGERD  = 0x08, // Level triggered (edge) mode
-    INITIALIZE      = 0x10, // Initialization
-    FINALIZE        = 0xFF, // Finalize (disable) PIC
+    ICW4_PRESENT   = 0x01,    // ICW4 will be present
+    SINGLE_MODE    = 0x02,    // Single (cascade) mode
+    INTERVAL_4     = 0x04,    // Call address interval 4 (8)
+    LEVEL_TRIGGERD = 0x08,    // Level triggered (edge) mode
+    INITIALIZE     = 0x10,    // Initialization
+    FINALIZE       = 0xFF,    // Finalize (disable) PIC
 };
 
 enum ICW4Commands : uint8_t {
-    INTEL_8086_MODE = 0x01, // 8086 (not 8080) mode
-    AUTO_MODE       = 0x02, // Auto (normal) EOI
-    BUFFER_SLAVE    = 0x08, // Buffered mode/slave
-    BUFFER_MASTER   = 0x0C, // Buffered mode/master
-    SFN_MODE        = 0x10, // Special fully nested (not)
+    INTEL_8086_MODE = 0x01,    // 8086 (not 8080) mode
+    AUTO_MODE       = 0x02,    // Auto (normal) EOI
+    BUFFER_SLAVE    = 0x08,    // Buffered mode/slave
+    BUFFER_MASTER   = 0x0C,    // Buffered mode/master
+    SFN_MODE        = 0x10,    // Special fully nested (not)
 };
 
 enum Addresses : uint8_t {
-    PIC1            = 0x20, // IO base address for master PIC
-    PIC2            = 0xA0, // IO base address for slave PIC
+    PIC1 = 0x20,    // IO base address for master PIC
+    PIC2 = 0xA0,    // IO base address for slave PIC
 };
 
 enum Operations : uint8_t {
-    PIC1_COMMAND    = PIC1,
-    PIC1_DATA       = (PIC1 + 1),
-    PIC2_COMMAND    = PIC2,
-    PIC2_DATA       = (PIC2 + 1),
+    PIC1_COMMAND = PIC1,
+    PIC1_DATA    = PIC1 + 1,
+    PIC2_COMMAND = PIC2,
+    PIC2_DATA    = PIC2 + 1,
 };
 
 enum Actions : uint8_t {
-    END_INERRUPT    = 0x20,
-    PIC2_CASCADE    = 0x02,
-    PIC1_CASCADE    = 0x04,
+    END_INERRUPT = 0x20,
+    PIC2_CASCADE = 0x02,
+    PIC1_CASCADE = 0x04,
 };
 
 // Functions

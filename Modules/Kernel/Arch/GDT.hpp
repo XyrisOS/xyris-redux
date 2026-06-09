@@ -10,8 +10,8 @@
  */
 
 #pragma once
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 namespace GDT
 {

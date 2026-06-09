@@ -11,8 +11,8 @@
 
 #include "Arch.hpp"
 #include "GDT.hpp"
-#include "Interrupts.hpp"
 #include "IDT.hpp"
+#include "Interrupts.hpp"
 #include "PIC.hpp"
 
 namespace Arch
@@ -22,16 +22,17 @@ void Initialize()
 {
     Interrupts::CriticalRegion([] {
         GDT::Initialize();
-        PIC::Initialize();  // TODO: Replace PIC with APIC when paging is done
+        PIC::Initialize();    // TODO: Replace PIC with APIC when paging is done
         IDT::Initialize();
     });
 }
 
 [[noreturn]]
-void HaltAndCatchFire() {
+void HaltAndCatchFire()
+{
     Interrupts::Disable();
     while (true) {
-        asm volatile ("hlt");
+        asm volatile("hlt");
     }
 }
 

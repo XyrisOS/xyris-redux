@@ -42,9 +42,9 @@ static void CommitAndFlush()
 }
 
 static void CreateEntry(
-    Entry &entry,
-    const Offset &offset,
-    const Gate &type)
+    Entry& entry,
+    const Offset& offset,
+    const Gate& type)
 {
     constexpr unsigned int kernelCodeSelector = (GDT::GDT::kernelCodeIndex() * sizeof(GDT::Entry));
 
