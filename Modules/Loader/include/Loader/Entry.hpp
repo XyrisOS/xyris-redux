@@ -20,6 +20,7 @@ namespace Kernel
  * Whatever the Loader is linked against must provide a `Kernel::Entry` implementation.
  *
  */
+[[noreturn]]
 void Entry();
 
 }

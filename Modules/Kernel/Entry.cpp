@@ -11,19 +11,19 @@
 
 #include <Loader/Entry.hpp>
 #include <Arch/Arch.hpp>
-#include <stddef.h>
 
 namespace Kernel
 {
 
+[[noreturn]]
 void Entry() {
     Arch::Initialize();
 
     // Loop on tasks
-    const uint32_t colors[] = { 0xFF00FF, 0xFFFF00, 0x00FFFF };
+    constexpr uint32_t colors[] = { 0xFF00FF, 0xFFFF00, 0x00FFFF };
     while (true) {
-        for (size_t i = 0; i < (sizeof(colors) / sizeof(colors[0])); i++) {
-            Loader::ShowProgress(colors[i]);
+        for (const unsigned int color : colors) {
+            Loader::ShowProgress(color);
         }
     }
 
