@@ -9,11 +9,11 @@
  *
  */
 
-#include "Arch.hpp"
-#include "GDT.hpp"
-#include "IDT.hpp"
-#include "Interrupts.hpp"
-#include "PIC.hpp"
+#include <Arch/Arch.hpp>
+#include "CPU/GDT.hpp"
+#include "Devices/PIC.hpp"
+#include "Interrupts/IDT.hpp"
+#include "Interrupts/Interrupts.hpp"
 
 namespace Arch
 {

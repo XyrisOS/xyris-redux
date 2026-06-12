@@ -9,8 +9,8 @@
  *
  */
 
-#include <Entry.hpp>
-#include <Arch.hpp>
+#include <Loader/Entry.hpp>
+#include <Arch/Arch.hpp>
 #include <stddef.h>
 
 namespace Kernel

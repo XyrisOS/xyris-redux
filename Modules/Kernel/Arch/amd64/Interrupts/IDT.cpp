@@ -10,7 +10,7 @@
  */
 
 #include "IDT.hpp"
-#include "GDT.hpp"
+#include "CPU/GDT.hpp"
 #include <stddef.h>
 
 namespace IDT

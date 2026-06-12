@@ -1,4 +1,4 @@
-#include <Arch/GDT.hpp>
+#include <Arch/amd64/CPU/GDT.hpp>
 #include <cstdlib>
 #include <iostream>
 #include "HexDump.hpp"

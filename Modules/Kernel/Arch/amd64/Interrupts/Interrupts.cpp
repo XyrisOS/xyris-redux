@@ -10,8 +10,8 @@
  */
 
 #include "Interrupts.hpp"
-#include "Arch.hpp"
-#include "PIC.hpp"
+#include "../../include/Arch/Arch.hpp"
+#include "Devices/PIC.hpp"
 #include <stdint.h>
 
 namespace Interrupts

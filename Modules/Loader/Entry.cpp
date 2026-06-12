@@ -9,7 +9,7 @@
  *
  */
 
-#include <Entry.hpp>
+#include <include/Loader/Entry.hpp>
 #include <limine.h>
 #include <stddef.h>
 #include <stdint.h>
