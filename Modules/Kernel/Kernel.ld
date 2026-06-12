@@ -16,7 +16,14 @@ PHDRS
 
 SECTIONS
 {
-    . = 0xffffffff80000000;
+    /* Standard kernel virtual address for x86_64 */
+    /* Also required by the Limine bootloader */
+    _KERNEL_BASE = 0xffffffff80000000;
+
+    /* Loaded kernel virtual address */
+    . = _KERNEL_BASE;
+    /* Start of kernel ELF memory */
+    _KERNEL_START = .;
 
     .text : {
         *(.text .text.*)
@@ -27,6 +34,14 @@ SECTIONS
 
     .rodata : {
         *(.rodata .rodata.*)
+    } :rodata
+
+    /* C++ is a language that allows for global constructors. In order to obtain the */
+    /* address of the ".init_array" section we need to define a symbol for it. */
+    .init_array : {
+        __init_array = .;
+        *(.init_array .init_array.*)
+        __init_array_end = .;
     } :rodata
 
     /* Move to the next memory page for .data */
@@ -49,6 +64,12 @@ SECTIONS
         *(.bss .bss.*)
         *(COMMON)
     } :data
+
+    /* End of kernel ELF memory */
+    _KERNEL_END = .;
+
+    /* Kernel memory map address */
+    _KERNEL_MAP = 0xffff800000000000;
 
     /* Discard .note.* and .eh_frame since they may cause issues on some hosts. */
     /DISCARD/ : {

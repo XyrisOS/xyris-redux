@@ -10,7 +10,6 @@
  */
 
 #include "GDT.hpp"
-#include <stddef.h>
 
 namespace GDT
 {
@@ -55,7 +54,7 @@ static void CreateEntry(
         .present = 1,
         .limitHigh = limit.section.high,
         .reserved = 0,
-        .longMode = 1,
+        .longMode = static_cast<unsigned int>(executable ? 1 : 0),
         .size = 0,
         .granularity = 1,
         .baseHigh = base.section.high,

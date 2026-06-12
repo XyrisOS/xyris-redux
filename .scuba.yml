@@ -1,4 +1,4 @@
-image: xyris-redux-build:1.0.0
+image: ghcr.io/xyrisos/xyris-redux/xyris-redux-build:1.0.0
 docker_args: '--net="host"'
 aliases:
   build: ./Meta/build.sh
