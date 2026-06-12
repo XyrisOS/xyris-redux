@@ -47,7 +47,7 @@ enum Operations : uint8_t {
 };
 
 enum Actions : uint8_t {
-    END_INERRUPT = 0x20,
+    END_INTERRUPT = 0x20,
     PIC2_CASCADE = 0x02,
     PIC1_CASCADE = 0x04,
 };
@@ -56,16 +56,10 @@ enum Actions : uint8_t {
 
 void Initialize()
 {
-    // TODO: There's a lot of magic going on here that I don't fully understand.
-
-    // Save masks for restoration after PIC initialization
-    uint8_t mask1 = IO::ReadByte(PIC1_DATA);
-    uint8_t mask2 = IO::ReadByte(PIC2_DATA);
-
     // Start initialization of PIC
     // (in cascade mode so that slave PICs are also initialized)
-    IO::WriteByte(PIC1_COMMAND, ICW1Commands::INITIALIZE | ICW1Commands::ICW4_PRESENT);
-    IO::WriteByte(PIC2_COMMAND, ICW1Commands::INITIALIZE | ICW1Commands::ICW4_PRESENT);
+    IO::WriteByte(PIC1_COMMAND, INITIALIZE | ICW4_PRESENT);
+    IO::WriteByte(PIC2_COMMAND, INITIALIZE | ICW4_PRESENT);
 
     // Write master and slave PIC vector offsets
     // Remap the interrupt offsets such that IRQs are within interrupts 32 - 47.
@@ -78,12 +72,13 @@ void Initialize()
     IO::WriteByte(PIC2_DATA, PIC2_CASCADE);
 
     // Update PICs to 8086 mode instead of 8080 mode
-    IO::WriteByte(PIC1_DATA, ICW4Commands::INTEL_8086_MODE);
-    IO::WriteByte(PIC2_DATA, ICW4Commands::INTEL_8086_MODE);
+    IO::WriteByte(PIC1_DATA, INTEL_8086_MODE);
+    IO::WriteByte(PIC2_DATA, INTEL_8086_MODE);
 
-    // Restore masks saved before initialization
-    IO::WriteByte(PIC1_DATA, mask1);
-    IO::WriteByte(PIC2_DATA, mask2);
+    // Unmask all IRQ lines. The generic interrupt handler acknowledges every
+    // PIC interrupt until device-specific handlers are registered.
+    IO::WriteByte(PIC1_DATA, 0x00);
+    IO::WriteByte(PIC2_DATA, 0x00);
 }
 
 void Finalize()
@@ -100,10 +95,10 @@ void EndOfInterrupt(const uint64_t id)
     // 8 since the 8259 handles 8 interrupts per controller), which results
     // in a value of 0x28 (40 decimal).
     if (id >= 0x28) {
-        IO::WriteByte(PIC2_COMMAND, END_INERRUPT);
+        IO::WriteByte(PIC2_COMMAND, END_INTERRUPT);
     }
 
-    IO::WriteByte(PIC1_COMMAND, END_INERRUPT);
+    IO::WriteByte(PIC1_COMMAND, END_INTERRUPT);
 }
 
 }

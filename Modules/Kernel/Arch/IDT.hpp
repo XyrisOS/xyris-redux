@@ -50,7 +50,7 @@ struct __attribute__((packed)) Entry {
     unsigned int selector     : 16;    // Segment selector
     // Interrupt Stack Table
     unsigned int stackTable   : 3;    // Interrupt stack table offset
-    unsigned int reservedLow  : 4;    // Reserved bytes
+    unsigned int reservedLow  : 5;    // Reserved bytes
     // Flags
     unsigned int type         : 4;    // Interrupt descriptor type
     unsigned int zero         : 1;    // Always zero

@@ -52,21 +52,18 @@ struct InterruptFrame {
 // this in the header though since we also don't want to define the
 // interrupt frame structure there given that only ISR.asm should be
 // calling into this.
-extern "C" void InterruptHandler(InterruptFrame* frame);
-extern "C" void InterruptHandler(InterruptFrame* frame)
+extern "C" void InterruptHandler(const InterruptFrame* frame);
+extern "C" void InterruptHandler(const InterruptFrame* frame)
 {
-    // Ensure interrupts are disabled while processing an interrupt
-    CriticalRegion([frame] {
-        // Halt on exceptions for now. Will update this to panic later.
-        if (frame->interrupt <= 32) {
-            Arch::HaltAndCatchFire();
-        }
+    // Halt on exceptions for now. Will update this to panic later.
+    if (frame->interrupt < 32) {
+        Arch::HaltAndCatchFire();
+    }
 
-        PIC::EndOfInterrupt(frame->interrupt);
+    PIC::EndOfInterrupt(frame->interrupt);
 
-        // TODO: Create way to register handlers and call into them here.
-        //       Make sure to allow for priority vs. lazy handling.
-    });
+    // TODO: Create way to register handlers and call into them here.
+    //       Make sure to allow for priority vs. lazy handling.
 }
 
 // Functions
