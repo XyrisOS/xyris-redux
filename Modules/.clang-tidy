@@ -119,6 +119,7 @@ performance-type-promotion-in-math-fn,
 performance-unnecessary-copy-initialization,
 performance-unnecessary-value-param,
 portability-simd-intrinsics,
+readability-identifier-naming,
 readability-avoid-const-params-in-decls,
 readability-const-return-type,
 readability-container-size-empty,
@@ -142,3 +143,14 @@ readability-static-definition-in-anonymous-namespace,
 readability-string-compare,
 readability-uniqueptr-delete-release,
 readability-use-anyofallof'
+CheckOptions:
+  # Public APIs use CapitalCamelCase. Static namespace-scope functions are
+  # treated as implementation-private and fall back to FunctionCase.
+  - key: readability-identifier-naming.GlobalFunctionCase
+    value: CamelCase
+  - key: readability-identifier-naming.PublicMethodCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMethodCase
+    value: camelBack

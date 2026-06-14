@@ -63,7 +63,7 @@ struct __attribute__((packed)) Entry {
 };
 
 struct __attribute__((packed)) IDT {
-    uintptr_t address() { return reinterpret_cast<uintptr_t>(&entries); }
+    uintptr_t Address() { return reinterpret_cast<uintptr_t>(&entries); }
 
     // Aligned for performance
     [[gnu::aligned(0x10)]] Entry entries[256];

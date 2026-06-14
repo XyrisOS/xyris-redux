@@ -24,18 +24,18 @@ static auto gdtr = GDTR();
 // Implemented by GDT.asm
 extern "C" void FlushGDT(GDTR* pGDTR);
 
-static void CommitAndFlush()
+static void commitAndFlush()
 {
     // Update GDT register and flush
     gdtr = {
         .size = sizeof(gdt) - 1,
-        .addr = gdt.address(),
+        .addr = gdt.Address(),
     };
 
     FlushGDT(&gdtr);
 }
 
-static void CreateEntry(
+static void createEntry(
     Entry& entry,
     const Base& base,
     const Limit& limit,
@@ -67,12 +67,12 @@ void Initialize()
     constexpr Base base = { .value = 0 };
     constexpr Limit limit = { .value = 0 };
 
-    CreateEntry(gdt.kernelCode(), base, limit, true, 0);
-    CreateEntry(gdt.kernelData(), base, limit, false, 0);
-    CreateEntry(gdt.userCode(), base, limit, true, 3);
-    CreateEntry(gdt.userData(), base, limit, false, 3);
+    createEntry(gdt.KernelCode(), base, limit, true, 0);
+    createEntry(gdt.KernelData(), base, limit, false, 0);
+    createEntry(gdt.UserCode(), base, limit, true, 3);
+    createEntry(gdt.UserData(), base, limit, false, 3);
 
-    CommitAndFlush();
+    commitAndFlush();
 }
 
 }

@@ -38,14 +38,6 @@ uint8_t ReadByte(uint16_t port);
 void WriteByte(uint16_t port, uint8_t data);
 
 /**
- * @brief Writes a byte (8 bits) slowly to the CPU bus at a given port address
- *
- * @param port Port address
- * @param data Byte to be written to the port
- */
-void writeByteSlow(uint16_t port, uint8_t data);
-
-/**
  * @brief Reads a word (16 bits) off the CPU bus at a given port address
  *
  * @param port Port address

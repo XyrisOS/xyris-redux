@@ -64,22 +64,22 @@ struct __attribute__((packed)) Entry {
 
 struct __attribute__((packed)) GDT {
     // Made available for other services like the IDT
-    static constexpr size_t kernelNullIndex() { return 0; }
-    static constexpr size_t kernelCodeIndex() { return 1; }
-    static constexpr size_t kernelDataIndex() { return 2; }
-    static constexpr size_t userNullIndex() { return 3; }
-    static constexpr size_t userCodeIndex() { return 4; }
-    static constexpr size_t userDataIndex() { return 5; }
+    static constexpr size_t KernelNullIndex() { return 0; }
+    static constexpr size_t KernelCodeIndex() { return 1; }
+    static constexpr size_t KernelDataIndex() { return 2; }
+    static constexpr size_t UserNullIndex() { return 3; }
+    static constexpr size_t UserCodeIndex() { return 4; }
+    static constexpr size_t UserDataIndex() { return 5; }
 
     // Accessor functions to eliminate potential confusion
-    Entry& kernelNull() { return entries[kernelNullIndex()]; }
-    Entry& kernelCode() { return entries[kernelCodeIndex()]; }
-    Entry& kernelData() { return entries[kernelDataIndex()]; }
-    Entry& userNull() { return entries[userNullIndex()]; }
-    Entry& userCode() { return entries[userCodeIndex()]; }
-    Entry& userData() { return entries[userDataIndex()]; }
+    Entry& KernelNull() { return entries[KernelNullIndex()]; }
+    Entry& KernelCode() { return entries[KernelCodeIndex()]; }
+    Entry& KernelData() { return entries[KernelDataIndex()]; }
+    Entry& UserNull() { return entries[UserNullIndex()]; }
+    Entry& UserCode() { return entries[UserCodeIndex()]; }
+    Entry& UserData() { return entries[UserDataIndex()]; }
 
-    uintptr_t address() { return reinterpret_cast<uintptr_t>(&entries); }
+    uintptr_t Address() { return reinterpret_cast<uintptr_t>(&entries); }
 
     Entry entries[6] = {
         Entry(),    // Kernel null
