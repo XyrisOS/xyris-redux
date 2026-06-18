@@ -8,6 +8,7 @@ target_sources(Arch PRIVATE
     Interrupts/IDT.cpp
     Interrupts/Interrupts.cpp
     Interrupts/ISR.asm
+    Interrupts/TSS.cpp
     Devices/PIC.cpp
     IO/Ports.cpp
 )
