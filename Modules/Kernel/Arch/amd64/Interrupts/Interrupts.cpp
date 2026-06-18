@@ -10,8 +10,7 @@
  */
 
 #include "Interrupts.hpp"
-#include "../../include/Arch/Arch.hpp"
-#include "Devices/PIC.hpp"
+#include <Arch/Arch.hpp>
 #include <stdint.h>
 
 namespace Interrupts
@@ -59,8 +58,6 @@ extern "C" void InterruptHandler(const InterruptFrame* frame)
     if (frame->interrupt < 32) {
         Arch::HaltAndCatchFire();
     }
-
-    PIC::EndOfInterrupt(frame->interrupt);
 
     // TODO: Create way to register handlers and call into them here.
     //       Make sure to allow for priority vs. lazy handling.

@@ -21,8 +21,8 @@ namespace Arch
 void Initialize()
 {
     Interrupts::CriticalRegion([] {
+        PIC::Initialize();
         GDT::Initialize();
-        PIC::Initialize();    // TODO: Replace PIC with APIC when paging is done
         IDT::Initialize();
     });
 }
