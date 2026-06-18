@@ -104,7 +104,7 @@ InterruptHandlerProxy:
 ;
 %assign i 0
 %rep    256
-    %if (i == 8 || (i >= 10 && i <= 14) || i == 17 || i == 30)
+    %if (i == 8 || (i >= 10 && i <= 14) || i == 17 || i == 21 || i == 29 || i == 30)
         InterruptError i
     %else
         Interrupt i
