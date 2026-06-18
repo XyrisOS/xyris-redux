@@ -10,7 +10,6 @@
  */
 
 #pragma once
-#include <stdint.h>
 
 namespace Arch::PIC
 {
@@ -18,8 +17,5 @@ namespace Arch::PIC
 // Functions
 
 void Initialize();
-void Finalize();
-
-void EndOfInterrupt(uint64_t id);
 
 }
