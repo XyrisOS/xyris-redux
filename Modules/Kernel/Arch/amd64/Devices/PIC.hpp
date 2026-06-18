@@ -12,7 +12,7 @@
 #pragma once
 #include <stdint.h>
 
-namespace PIC
+namespace Arch::PIC
 {
 
 // Functions

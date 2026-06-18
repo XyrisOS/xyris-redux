@@ -12,7 +12,7 @@
 #pragma once
 #include <CPU/FlagsR.hpp>
 
-namespace Interrupts
+namespace Arch::Interrupts
 {
 
 void Enable();

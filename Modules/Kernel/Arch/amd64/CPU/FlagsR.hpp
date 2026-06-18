@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-namespace Registers
+namespace Arch::Registers
 {
 
 /** Bitwise structure definitions for contents of AMD64 FLAGS register */

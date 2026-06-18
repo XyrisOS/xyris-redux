@@ -12,7 +12,7 @@
 #pragma once
 #include <stdint.h>
 
-namespace IDT
+namespace Arch::IDT
 {
 
 // Types

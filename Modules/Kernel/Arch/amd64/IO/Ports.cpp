@@ -10,7 +10,7 @@
  */
 #include "Ports.hpp"
 
-namespace IO
+namespace Arch::IO
 {
 
 uint8_t ReadByte(uint16_t port)

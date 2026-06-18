@@ -12,7 +12,7 @@
 #include "PIC.hpp"
 #include "IO/Ports.hpp"
 
-namespace PIC
+namespace Arch::PIC
 {
 
 // Types

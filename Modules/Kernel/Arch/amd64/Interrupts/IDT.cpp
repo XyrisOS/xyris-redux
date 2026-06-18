@@ -13,7 +13,7 @@
 #include "CPU/GDT.hpp"
 #include <stddef.h>
 
-namespace IDT
+namespace Arch::IDT
 {
 
 // Variables
@@ -68,9 +68,7 @@ void Initialize()
     constexpr size_t max = sizeof(InterruptTable) / sizeof(InterruptTable[0]);
     for (size_t i = 0; i < max; i++) {
         // Have the interrupt variable here for debugging atm.
-        // TODO: Simplify by removing variable.
-        void* interrupt = InterruptTable[i];
-        Offset offset = { .value = reinterpret_cast<uintptr_t>(interrupt) };
+        Offset offset = { .value = reinterpret_cast<uintptr_t>(InterruptTable[i]) };
 
         createEntry(idt.entries[i], offset, GateInterrupt);
     }

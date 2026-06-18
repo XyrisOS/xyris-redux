@@ -11,7 +11,7 @@
 
 #include "GDT.hpp"
 
-namespace GDT
+namespace Arch::GDT
 {
 
 // Variables

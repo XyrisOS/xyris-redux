@@ -13,7 +13,7 @@
 #include <Arch/Arch.hpp>
 #include <stdint.h>
 
-namespace Interrupts
+namespace Arch::Interrupts
 {
 
 // Types

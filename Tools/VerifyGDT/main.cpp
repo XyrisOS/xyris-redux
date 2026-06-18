@@ -7,11 +7,11 @@ int main(int argc, char* argv[]) {
     (void) argc;
     (void) argv;
 
-    GDT::Initialize();
+    Arch::GDT::Initialize();
     return EXIT_SUCCESS;
 }
 
-namespace GDT {
+namespace Arch::GDT {
     extern "C" void FlushGDT(GDTR* pGDTR);
 
     extern "C" void FlushGDT(GDTR* pGDTR) {
