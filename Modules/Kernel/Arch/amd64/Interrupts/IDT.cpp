@@ -46,7 +46,7 @@ static void createEntry(
     const Offset& offset,
     const Gate& type)
 {
-    constexpr unsigned int kernelCodeSelector = (GDT::GDT::KernelCodeIndex() * sizeof(GDT::Entry));
+    constexpr unsigned int kernelCodeSelector = (GDT::Entries::KernelCodeIndex() * sizeof(GDT::Entry));
 
     entry = {
         .offsetLow = offset.section.low,

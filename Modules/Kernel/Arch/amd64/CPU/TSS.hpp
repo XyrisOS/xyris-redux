@@ -60,7 +60,7 @@ static_assert(sizeof(Entry) == 16, "TSS entry size assertion failure");
 // Functions
 
 void Initialize();
-/** Returns an Entry to be loaded into the GDT */
-Entry InitializeEntry(uintptr_t base, uint32_t limit);
+/** Creates and returns an Entry to be loaded into the GDT */
+Entry CreateEntry();
 
 }

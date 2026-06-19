@@ -49,7 +49,7 @@ void Initialize()
     };
 }
 
-Entry InitializeEntry()
+Entry CreateEntry()
 {
     const auto base = reinterpret_cast<uintptr_t>(&tss);
     constexpr uint32_t limit = sizeof(TSS) - 1;
