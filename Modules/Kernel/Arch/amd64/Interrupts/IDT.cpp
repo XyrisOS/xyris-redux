@@ -20,10 +20,10 @@ namespace Arch::IDT
 
 // Defined by ISR.asm
 extern "C" void* InterruptTable[256];
-static_assert((sizeof(InterruptTable) / sizeof(InterruptTable[0])) == (sizeof(IDT) / sizeof(Entry)), "Interrupt table and IDT sizes differ");
+static_assert(sizeof(InterruptTable) / sizeof(InterruptTable[0]) == sizeof(IDT) / sizeof(Entry), "Interrupt table and IDT sizes differ");
 
-static IDT idt = IDT();
-static IDTR idtr = IDTR();
+static auto idt = IDT();
+static auto idtr = IDTR();
 
 // Functions
 
@@ -44,14 +44,15 @@ static void commitAndFlush()
 static void createEntry(
     Entry& entry,
     const Offset& offset,
-    const Gate& type)
+    const Gate& type,
+    const uint8_t stackTable = 0)
 {
     constexpr unsigned int kernelCodeSelector = (GDT::Entries::KernelCodeIndex() * sizeof(GDT::Entry));
 
     entry = {
         .offsetLow = offset.section.low,
         .selector = kernelCodeSelector,
-        .stackTable = 0,
+        .stackTable = stackTable,
         .reservedLow = 0,
         .type = type,
         .zero = 0,
@@ -70,7 +71,9 @@ void Initialize()
         // Have the interrupt variable here for debugging atm.
         Offset offset = { .value = reinterpret_cast<uintptr_t>(InterruptTable[i]) };
 
-        createEntry(idt.entries[i], offset, GateInterrupt);
+        // Interrupt vector #8 is assigned to st
+        const uint8_t stackTable = i == 8 ? 1 : 0;
+        createEntry(idt.entries[i], offset, GateInterrupt, stackTable);
     }
 
     commitAndFlush();

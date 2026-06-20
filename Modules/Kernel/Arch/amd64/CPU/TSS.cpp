@@ -23,6 +23,10 @@ enum Type : uint8_t {
 
 // Variables
 
+// NOLINTBEGIN(*-reserved-identifier)
+extern "C" uint8_t __double_fault_stack_top[];
+// NOLINTEND(*-reserved-identifier)
+
 static auto tss = TSS();
 
 // Functions
@@ -33,7 +37,7 @@ TSS::TSS()
     , rsp1(0)
     , rsp2(0)
     , reserved1(0)
-    , ist1(0)
+    , ist1(reinterpret_cast<uintptr_t>(__double_fault_stack_top))
     , ist2(0)
     , ist3(0)
     , ist4(0)

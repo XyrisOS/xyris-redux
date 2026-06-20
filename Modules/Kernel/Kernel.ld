@@ -77,6 +77,12 @@ SECTIONS
     .bss : {
         *(.bss .bss.*)
         *(COMMON)
+
+        /* Double fault stack to allow kernel recovery */
+        . = ALIGN(16);
+        __double_fault_stack_bottom = .;
+        . += 0x4000;
+        __double_fault_stack_top = .;
     } :data
 
     /* End of kernel ELF memory */
