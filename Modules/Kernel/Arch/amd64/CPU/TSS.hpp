@@ -34,6 +34,8 @@ struct __attribute__((packed)) TSS {
     uint64_t reserved2;
     uint16_t reserved3;
     uint16_t ioPB;          // I/O Map Base Address
+
+    TSS();
 };
 
 /** TSS entry to be loaded by the GDT to reference the TSS */
@@ -59,7 +61,6 @@ static_assert(sizeof(Entry) == 16, "TSS entry size assertion failure");
 
 // Functions
 
-void Initialize();
 /** Creates and returns an Entry to be loaded into the GDT */
 Entry CreateEntry();
 

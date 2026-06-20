@@ -11,7 +11,6 @@
 
 #include <Arch/Arch.hpp>
 #include "CPU/GDT.hpp"
-#include "CPU/TSS.hpp"
 #include "Devices/PIC.hpp"
 #include "Interrupts/IDT.hpp"
 #include "Interrupts/Interrupts.hpp"
@@ -23,7 +22,6 @@ void Initialize()
 {
     Interrupts::CriticalRegion([] {
         PIC::Initialize();
-        TSS::Initialize();
         GDT::Initialize();
         IDT::Initialize();
     });
