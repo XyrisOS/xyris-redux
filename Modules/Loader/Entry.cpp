@@ -17,8 +17,14 @@
 // Variables
 
 // Extern declarations for C++ global constructors.
+// NOLINTBEGIN(*-reserved-identifier)
+extern void (*__preinit_array[])();
+extern void (*__preinit_array_end[])();
 extern void (*__init_array[])();
 extern void (*__init_array_end[])();
+extern void (*__ctors[])();
+extern void (*__ctors_end[])();
+// NOLINTEND(*-reserved-identifier)
 
 static volatile limine_framebuffer_request framebufferRequest = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
@@ -28,6 +34,21 @@ static volatile limine_framebuffer_request framebufferRequest = {
 
 namespace Loader
 {
+
+static void callConstructors(void (**begin)(), void (**end)())
+{
+    for (auto constructor = begin; constructor != end; constructor++) {
+        (*constructor)();
+    }
+}
+
+static void callLegacyConstructors(void (**begin)(), void (**end)())
+{
+    // Legacy .ctors are conventionally run in reverse order.
+    for (auto constructor = end; constructor != begin;) {
+        (*--constructor)();
+    }
+}
 
 [[noreturn]]
 void HaltAndCatchFire()
@@ -61,9 +82,10 @@ void LoaderEntry(void);
 void LoaderEntry(void)
 {
     // Call all C++ global constructors before doing anything else.
-    for (size_t i = 0; &__init_array[i] != __init_array_end; i++) {
-        __init_array[i]();
-    }
+    Loader::callConstructors(__preinit_array, __preinit_array_end);
+    Loader::callConstructors(__init_array, __init_array_end);
+    Loader::callLegacyConstructors(__ctors, __ctors_end);
+
     // Ensure we got a framebuffer.
     if (framebufferRequest.response == nullptr || framebufferRequest.response->framebuffer_count < 1) {
         Loader::HaltAndCatchFire();

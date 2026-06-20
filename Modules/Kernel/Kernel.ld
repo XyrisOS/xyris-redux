@@ -36,12 +36,26 @@ SECTIONS
         *(.rodata .rodata.*)
     } :rodata
 
-    /* C++ is a language that allows for global constructors. In order to obtain the */
-    /* address of the ".init_array" section we need to define a symbol for it. */
+    /* C++ global constructors. Modern toolchains use .preinit_array/.init_array, */
+    /* while older or differently configured toolchains may still emit .ctors. */
+    .preinit_array : {
+        __preinit_array = .;
+        KEEP(*(.preinit_array .preinit_array.*))
+        __preinit_array_end = .;
+    } :rodata
+
     .init_array : {
         __init_array = .;
-        *(.init_array .init_array.*)
+        KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)))
+        KEEP(*(.init_array))
         __init_array_end = .;
+    } :rodata
+
+    .ctors : {
+        __ctors = .;
+        KEEP(*(SORT_BY_INIT_PRIORITY(.ctors.*)))
+        KEEP(*(.ctors))
+        __ctors_end = .;
     } :rodata
 
     /* Move to the next memory page for .data */
