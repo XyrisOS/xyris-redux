@@ -22,8 +22,13 @@ namespace Arch::GDT {
         GDT* pGDT = reinterpret_cast<GDT*>(pGDTR->addr);
         std::cout << "Validating GDT [" << pGDT << "]" << std::endl;
         for (size_t i = 0; i != 6; i++) {
-            Entry& entry = pGDT->entries[i];
-            std::cout << "  [" << i << "] " << HexDump(&entry, sizeof(Entry));
+            Entry& entry = pGDT->entries.entries[i];
+            std::cout << "  [" << i << "] " << HexDump(
+                &entry,
+                sizeof(Entry));
         }
+        std::cout << "  [6..7] " << HexDump(
+            &pGDT->entries.tssEntry,
+            sizeof(pGDT->entries.tssEntry));
     }
 }

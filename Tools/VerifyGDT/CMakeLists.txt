@@ -4,6 +4,7 @@ message(STATUS "  [-] VerifyGDT")
 add_executable(VerifyGDT
     main.cpp
     ${MODULES_KERNEL_DIR}/Arch/amd64/CPU/GDT.cpp
+    ${MODULES_KERNEL_DIR}/Arch/amd64/CPU/TSS.cpp
 )
 
 target_include_directories(VerifyGDT PRIVATE ${MODULES_KERNEL_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
