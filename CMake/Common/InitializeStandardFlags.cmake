@@ -15,7 +15,7 @@ set(C_CXX_WARNINGS
     -Wextra
     -Wundef
     -Winline
-    -Wshadow
+    -Wshadow=local
     -Wformat=2
     -Wcast-align
     -Wno-long-long

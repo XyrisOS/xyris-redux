@@ -14,9 +14,8 @@ set_target_properties(Kernel PROPERTIES
     LINKER_LANGUAGE CXX
 )
 target_link_options(Kernel PRIVATE -Wl,--script=${LINKER_SCRIPT})
-target_link_libraries(Kernel PRIVATE
-    Loader
-    Arch
+target_link_libraries(Kernel
+    PRIVATE Loader Arch MemoryLayout
 )
 
 install(TARGETS Kernel DESTINATION ${CMAKE_INSTALL_PREFIX})
