@@ -120,8 +120,8 @@ section .data
 ;
 ; Interrupts 0..32 (inclusive) are CPU exceptions.
 ;
-global InterruptTable
-InterruptTable:
+global InterruptHandlerStubTable
+InterruptHandlerStubTable:
 %assign i 0
 %rep    256
     dq Interrupt%+i

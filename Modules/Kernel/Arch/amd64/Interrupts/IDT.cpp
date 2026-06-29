@@ -18,9 +18,11 @@ namespace Arch::IDT
 
 // Variables
 
-// Defined by ISR.asm
-extern "C" void* InterruptTable[256];
-static_assert(sizeof(InterruptTable) / sizeof(InterruptTable[0]) == sizeof(IDT) / sizeof(Entry), "Interrupt table and IDT sizes differ");
+// Table of ISR stub entry-point addresses defined by ISR.asm to reference when initializing
+extern "C" void* InterruptHandlerStubTable[256];
+static_assert(
+    sizeof(InterruptHandlerStubTable) / sizeof(InterruptHandlerStubTable[0]) == sizeof(IDT) / sizeof(Entry),
+    "Interrupt table and IDT sizes differ");
 
 static auto idt = IDT();
 static auto idtr = IDTR();
@@ -66,12 +68,11 @@ static void createEntry(
 
 void Initialize()
 {
-    constexpr size_t max = sizeof(InterruptTable) / sizeof(InterruptTable[0]);
+    constexpr size_t max = sizeof(InterruptHandlerStubTable) / sizeof(InterruptHandlerStubTable[0]);
     for (size_t i = 0; i < max; i++) {
-        // Have the interrupt variable here for debugging atm.
-        Offset offset = { .value = reinterpret_cast<uintptr_t>(InterruptTable[i]) };
+        Offset offset = { .value = reinterpret_cast<uintptr_t>(InterruptHandlerStubTable[i]) };
 
-        // Interrupt vector #8 is assigned to st
+        // Interrupt vector #8 is assigned stack table #1
         const uint8_t stackTable = i == 8 ? 1 : 0;
         createEntry(idt.entries[i], offset, GateInterrupt, stackTable);
     }

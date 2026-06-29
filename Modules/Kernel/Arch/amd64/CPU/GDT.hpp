@@ -112,7 +112,7 @@ struct __attribute((packed)) Entries {
     static constexpr size_t UserNullIndex() { return 3; }
     static constexpr size_t UserCodeIndex() { return 4; }
     static constexpr size_t UserDataIndex() { return 5; }
-    static constexpr size_t TasKSelectorIndex() { return 6; }
+    static constexpr size_t TaskSelectorIndex() { return 6; }
 
     // GDT entries
     Entry entries[6] = {
@@ -128,16 +128,6 @@ struct __attribute((packed)) Entries {
     //  This effectively lives at descriptor index 6 and 7 since it's the size
     //  of 2 GDT entries.
     TSS::Entry tssEntry = TSS::CreateEntry();
-
-    // Accessor functions to eliminate potential confusion
-    // TODO: Do I actually need to make these available? They're unused now.
-    Entry& KernelNull() { return entries[KernelNullIndex()]; }
-    Entry& KernelCode() { return entries[KernelCodeIndex()]; }
-    Entry& KernelData() { return entries[KernelDataIndex()]; }
-    Entry& UserNull() { return entries[UserNullIndex()]; }
-    Entry& UserCode() { return entries[UserCodeIndex()]; }
-    Entry& UserData() { return entries[UserDataIndex()]; }
-    TSS::Entry& TaskState() { return tssEntry; }
 };
 
 struct __attribute__((packed)) GDT {
