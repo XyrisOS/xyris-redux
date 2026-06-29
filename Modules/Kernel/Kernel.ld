@@ -16,7 +16,14 @@ PHDRS
 
 SECTIONS
 {
-    . = 0xffffffff80000000;
+    /* Standard kernel virtual address for x86_64 */
+    /* Also required by the Limine bootloader */
+    _KERNEL_BASE = 0xffffffff80000000;
+
+    /* Loaded kernel virtual address */
+    . = _KERNEL_BASE;
+    /* Start of kernel ELF memory */
+    _KERNEL_START = .;
 
     .text : {
         *(.text .text.*)
@@ -27,6 +34,28 @@ SECTIONS
 
     .rodata : {
         *(.rodata .rodata.*)
+    } :rodata
+
+    /* C++ global constructors. Modern toolchains use .preinit_array/.init_array, */
+    /* while older or differently configured toolchains may still emit .ctors. */
+    .preinit_array : {
+        __preinit_array = .;
+        KEEP(*(.preinit_array .preinit_array.*))
+        __preinit_array_end = .;
+    } :rodata
+
+    .init_array : {
+        __init_array = .;
+        KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)))
+        KEEP(*(.init_array))
+        __init_array_end = .;
+    } :rodata
+
+    .ctors : {
+        __ctors = .;
+        KEEP(*(SORT_BY_INIT_PRIORITY(.ctors.*)))
+        KEEP(*(.ctors))
+        __ctors_end = .;
     } :rodata
 
     /* Move to the next memory page for .data */
@@ -48,7 +77,19 @@ SECTIONS
     .bss : {
         *(.bss .bss.*)
         *(COMMON)
+
+        /* Double fault stack to allow kernel recovery */
+        . = ALIGN(16);
+        __double_fault_stack_bottom = .;
+        . += 0x4000;
+        __double_fault_stack_top = .;
     } :data
+
+    /* End of kernel ELF memory */
+    _KERNEL_END = .;
+
+    /* Kernel memory map address */
+    _KERNEL_MAP = 0xffff800000000000;
 
     /* Discard .note.* and .eh_frame since they may cause issues on some hosts. */
     /DISCARD/ : {

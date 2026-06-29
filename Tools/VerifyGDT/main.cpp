@@ -1,4 +1,4 @@
-#include <Arch/GDT.hpp>
+#include <Arch/amd64/CPU/GDT.hpp>
 #include <cstdlib>
 #include <iostream>
 #include "HexDump.hpp"
@@ -7,11 +7,11 @@ int main(int argc, char* argv[]) {
     (void) argc;
     (void) argv;
 
-    GDT::Initialize();
+    Arch::GDT::Initialize();
     return EXIT_SUCCESS;
 }
 
-namespace GDT {
+namespace Arch::GDT {
     extern "C" void FlushGDT(GDTR* pGDTR);
 
     extern "C" void FlushGDT(GDTR* pGDTR) {
@@ -22,8 +22,13 @@ namespace GDT {
         GDT* pGDT = reinterpret_cast<GDT*>(pGDTR->addr);
         std::cout << "Validating GDT [" << pGDT << "]" << std::endl;
         for (size_t i = 0; i != 6; i++) {
-            Entry& entry = pGDT->entries[i];
-            std::cout << "  [" << i << "] " << HexDump(&entry, sizeof(Entry));
+            Entry& entry = pGDT->entries.entries[i];
+            std::cout << "  [" << i << "] " << HexDump(
+                &entry,
+                sizeof(Entry));
         }
+        std::cout << "  [6..7] " << HexDump(
+            &pGDT->entries.tssEntry,
+            sizeof(pGDT->entries.tssEntry));
     }
 }

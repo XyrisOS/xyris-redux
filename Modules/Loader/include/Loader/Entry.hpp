@@ -10,6 +10,7 @@
  */
 
 #pragma once
+#include <stdint.h>
 
 namespace Kernel
 {
@@ -19,6 +20,7 @@ namespace Kernel
  * Whatever the Loader is linked against must provide a `Kernel::Entry` implementation.
  *
  */
+[[noreturn]]
 void Entry();
 
 }
@@ -33,6 +35,6 @@ namespace Loader
 [[noreturn]]
 void HaltAndCatchFire();
 
-void ShowProgress();
+void ShowProgress(uint32_t color);
 
 }

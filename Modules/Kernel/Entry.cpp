@@ -9,19 +9,25 @@
  *
  */
 
-#include <Entry.hpp>
-#include <Arch.hpp>
+#include <Loader/Entry.hpp>
+#include <Arch/Arch.hpp>
 
 namespace Kernel
 {
 
+[[noreturn]]
 void Entry() {
     Arch::Initialize();
-    Loader::ShowProgress();
 
     // Loop on tasks
+    constexpr uint32_t colors[] = { 0xFF00FF, 0xFFFF00, 0x00FFFF };
+    while (true) {
+        for (const unsigned int color : colors) {
+            Loader::ShowProgress(color);
+        }
+    }
 
-    Loader::HaltAndCatchFire();
+    Arch::HaltAndCatchFire();
 }
 
 }
