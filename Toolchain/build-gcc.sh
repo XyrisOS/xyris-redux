@@ -38,6 +38,9 @@ fi
 
 rm "gcc-${GCC_VER}.tar.gz"
 
+# Fixes issues when trying to compile GCC/G++
+export CXX="${CXX:-g++} -fno-char8_t"
+
 DARWIN_FLAGS=""
 if [ "$(uname)" = "Darwin" ]; then
     echo "[*] Building on Darwin -- adding extra flags..."
